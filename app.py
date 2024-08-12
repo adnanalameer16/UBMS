@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import text
+from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Initialize Flask application
@@ -55,6 +56,20 @@ class Courses(db.Model):
     semester = db.Column(db.String(100), nullable=False)
     def __repr__(self):
         return f'<Course {self.name}>'
+class Enrollments(db.Model):
+    enrollment_id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, primary_key=False)
+    class_id = db.Column(db.Integer, primary_key=False)
+    def __repr__(self):
+        return f'<Enrollments {self.student_id} {self.class_id}>'
+class Grades(db.Model):
+    grade_id = db.Column(db.Integer, primary_key=True)
+    enrollment_id = db.Column(db.Integer, primary_key=False)
+
+    grade = db.Column(db.String(100), nullable=False)
+    grade_date = db.Column(db.String(100), primary_key=False)
+    def __repr__(self):
+        return f'<Grades {self.student_id} {self.class_id}>'
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -141,10 +156,73 @@ def add_course():
     db.session.add(new_course)
     db.session.commit()
     return "Course added successfully!"
+@app.route('/addenrollment')
+def add_enrollment():
+    new_enrollment = Enrollments(
+        enrollment_id=1,
+        student_id=1,
+        class_id=1
+    )
+    db.session.add(new_enrollment)
+    db.session.commit()
+    return "Enrollment added successfully!"
+@app.route('/addgrade')
+def add_grade():
+    new_grade = Grades(
+        grade_id=1,
+        enrollment_id=1,
+        grade="A",
+        grade_date="2021-06-01"
+    )
+    db.session.add(new_grade)
+    db.session.commit()
+    return "Grade added successfully!"
 
 @app.route('/displaystudents')
 def display_students():
     sql = text('SELECT * FROM Student')
+    result= db.session.execute(sql)
+    return result.fetchall().__str__()
+from sqlalchemy.sql import text
+
+@app.route('/createview')
+def create_view():
+    view_sql =text( """
+    CREATE VIEW view1 AS
+    SELECT 
+        s.id AS student_id,
+        s.fname AS student_fname,
+        s.lname AS student_lname,
+        s.dob AS student_dob,
+        s.email AS student_email,
+        s.phone AS student_phone,
+        s.enroll_date AS student_enroll_date,
+        c.name AS class_name,
+        f.fname AS faculty_fname,
+        f.lname AS faculty_lname,
+        d.name AS department_name,
+        co.course_name,
+        g.grade,
+        g.grade_date
+    FROM 
+        Student s
+    JOIN 
+        Class c ON s.class_id = c.id
+    JOIN 
+        faculty f ON c.faculty_id = f.id
+    JOIN 
+        Department d ON f.department_id = d.id
+    JOIN 
+        Courses co ON c.course_id = co.course_id
+    JOIN 
+        Enrollments e ON s.id = e.student_id
+    JOIN 
+        Grades g ON e.enrollment_id = g.enrollment_id;
+    """)
+    db.session.execute(view_sql)
+@app.route('/displayview')
+def display_view():
+    sql = text('SELECT * FROM view1')
     result= db.session.execute(sql)
     return result.fetchall().__str__()
 if __name__ == '__main__':
