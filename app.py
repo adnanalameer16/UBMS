@@ -62,10 +62,9 @@ class Enrollments(db.Model):
     class_id = db.Column(db.Integer, primary_key=False)
     def __repr__(self):
         return f'<Enrollments {self.student_id} {self.class_id}>'
-class Grades(db.Model):
-    grade_id = db.Column(db.Integer, primary_key=True)
+class Grade(db.Model):
     enrollment_id = db.Column(db.Integer, primary_key=False)
-
+    subject = db.Column(db.String(100), primary_key=False)
     grade = db.Column(db.String(100), nullable=False)
     grade_date = db.Column(db.String(100), primary_key=False)
     def __repr__(self):
@@ -173,9 +172,9 @@ def add_enrollment():
     return "Enrollment added successfully!"
 @app.route('/addgrade')
 def add_grade():
-    new_grade = Grades(
-        grade_id=1,
+    new_grade = Grade(
         enrollment_id=1,
+        subject="Bio",
         grade="A",
         grade_date="2021-06-01"
     )
@@ -222,13 +221,13 @@ def create_view():
     JOIN 
         Enrollments e ON s.id = e.student_id
     JOIN 
-        Grades g ON e.enrollment_id = g.enrollment_id;
+        Grade g ON e.enrollment_id = g.enrollment_id;
     """)
     db.session.execute(view_sql)
-@app.route('/displayview')
-def display_view():
-    sql = text('SELECT * FROM view1')
-    result= db.session.execute(sql)
-    return result.fetchall().__str__()
+#@app.route('/displayview')
+#def display_view():
+ #   sql = text('SELECT * FROM view1')
+  #  result= db.session.execute(sql)
+   # return result.fetchall().__str__()
 if __name__ == '__main__':
     app.run(debug=True)
