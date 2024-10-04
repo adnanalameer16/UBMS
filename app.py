@@ -74,17 +74,18 @@ class Grades(db.Model):
 def index():
     return render_template('index.html')
 
-@app.route('/addstudent')
+@app.route('/addstudent',methods=['POST'])
 def add_student():
     # Sample student data
-    student_id = 1
-    fname = "Gauthamkrishna"
-    lname = "Binoy"
-    dob = "2004-11-03"
-    email = "gautham12321@gmail.com"
-    phone = "7736687884"
-    enroll_date = "2021-06-01"
-    class_id = 1
+    data=request.get_json()
+    student_id = data.get('student_id')
+    fname = data.get('fname')
+    lname = data.get('lname')
+    dob = data.get('dob')
+    email = data.get('email')
+    phone = data.get('phone')
+    enroll_date = data.get('enroll_date')
+    class_id = data.get('class_id')
 
     # Create a new student instance
     new_student = Student(
