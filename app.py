@@ -6,7 +6,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Initialize Flask application
-app = Flask(__name__)
+app = Flask(__name__,static_folder='static',template_folder='templates')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///universityDB.db'  # Replace with your database URI
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -104,7 +104,11 @@ def add_student():
     db.session.commit()
 
     return "Student added successfully!"
-
+@app.route('/addstudent1',methods=['POST'])
+def test():
+    data=request.get_json()
+    print(data)
+    return "Student added successfully!"
 @app.route('/addclass')
 def add_class():
     new_class = Class(

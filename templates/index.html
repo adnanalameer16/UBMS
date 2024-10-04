@@ -1,9 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Buttons, One Input Box, and a Display Box</title>
+<link rel="stylesheet"  href="{{ url_for('static',filename='style.css')}}">
+</head>
 <body>
 
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
+    <h2>Input and Display</h2>
 
+    <!-- Input Box -->
+    <label for="inputBox">Input Text:</label>
+    <input type="text" id="inputBox" name="inputBox">
+    <br><br>
+
+    <!-- Buttons -->
+    <button id="showButton" type="button">Show</button>
+    <button id="clearButton" type="button">Clear</button>
+
+    <!-- Display Box -->
+    <div id="displayBox">Your text will appear here</div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
