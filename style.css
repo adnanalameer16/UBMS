@@ -1,0 +1,11 @@
+#displayBox {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid black;
+    width: 200px;
+    height: 50px;
+}
+#inputBox{
+    height: 50px;
+    width: 200px;
+}
