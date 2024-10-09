@@ -108,75 +108,114 @@ def test():
     data=request.get_json()
     print(data)
     return "Student added successfully!"
-@app.route('/addclass')
+@app.route('/addclass', methods=['POST'])
 def add_class():
+    data = request.get_json()
+    class_id = data.get('class_id')
+    name = data.get('name')
+    course_id = data.get('course_id')
+    faculty_id = data.get('faculty_id')
+
     new_class = Class(
-        id=1,
-        name="Math",
-        course_id=1,
-        faculty_id=1
+        id=class_id,
+        name=name,
+        course_id=course_id,
+        faculty_id=faculty_id
     )
 
-
-
-    # Add the student to the session and commit
     db.session.add(new_class)
     db.session.commit()
 
     return "Class added successfully!"
 
-@app.route('/addfaculty')
+@app.route('/addfaculty', methods=['POST'])
 def add_faculty():
+    data = request.get_json()
+    faculty_id = data.get('faculty_id')
+    fname = data.get('fname')
+    lname = data.get('lname')
+    email = data.get('email')
+    phone = data.get('phone')
+    department_id = data.get('department_id')
+
     new_faculty = faculty(
-        id=1,
-        fname="John",
-        lname="Doe",
-        email="joh@gmail.com",
-        phone="7736687884",
-        department_id=1)
+        id=faculty_id,
+        fname=fname,
+        lname=lname,
+        email=email,
+        phone=phone,
+        department_id=department_id
+    )
+
     db.session.add(new_faculty)
     db.session.commit()
     return "Faculty added successfully!"
 
-@app.route('/adddepartment')
+@app.route('/adddepartment', methods=['POST'])
 def add_department():
+    data = request.get_json()
+    department_id = data.get('department_id')
+    name = data.get('name')
+    head = data.get('head')
+
     new_department = Department(
-        id=1,
-        name="CS",
-        head=1
+        id=department_id,
+        name=name,
+        head=head
     )
     db.session.add(new_department)
     db.session.commit()
     return "Department added successfully!"
-@app.route('/addcourse')
+
+@app.route('/addcourse', methods=['POST'])
 def add_course():
+    data = request.get_json()
+    course_id = data.get('course_id')
+    course_name = data.get('course_name')
+    department_id = data.get('department_id')
+    credits = data.get('credits')
+    semester = data.get('semester')
+
     new_course = Courses(
-        course_id=1,
-        course_name="Math",
-        department_id=1,
-        credits=4,
-        semester="1"
+        course_id=course_id,
+        course_name=course_name,
+        department_id=department_id,
+        credits=credits,
+        semester=semester
     )
     db.session.add(new_course)
     db.session.commit()
     return "Course added successfully!"
-@app.route('/addenrollment')
+
+@app.route('/addenrollment', methods=['POST'])
 def add_enrollment():
+    data = request.get_json()
+    enrollment_id = data.get('enrollment_id')
+    student_id = data.get('student_id')
+    class_id = data.get('class_id')
+
     new_enrollment = Enrollments(
-        enrollment_id=1,
-        student_id=1,
-        class_id=1
+        enrollment_id=enrollment_id,
+        student_id=student_id,
+        class_id=class_id
     )
     db.session.add(new_enrollment)
     db.session.commit()
     return "Enrollment added successfully!"
-@app.route('/addgrade')
+
+@app.route('/addgrade', methods=['POST'])
 def add_grade():
+    data = request.get_json()
+    enrollment_id = data.get('enrollment_id')
+    subject = data.get('subject')
+    grade = data.get('grade')
+    grade_date = data.get('grade_date')
+
     new_grade = Grade(
-        enrollment_id=1,
-        subject="Bio",
-        grade="A",
-        grade_date="2021-06-01"
+        enrollment_id=enrollment_id,
+        subject=subject,
+        grade=grade,
+        grade_date=grade_date
     )
     db.session.add(new_grade)
     db.session.commit()
@@ -211,15 +250,16 @@ def create_view():
     FROM 
         Student s
     JOIN 
-        Class c ON s.class_id = c.id
+        Enrollments e ON s.id = e.student_id
+    JOIN 
+        Class c ON e.class_id = c.id
     JOIN 
         faculty f ON c.faculty_id = f.id
     JOIN 
         Department d ON f.department_id = d.id
     JOIN 
         Courses co ON c.course_id = co.course_id
-    JOIN 
-        Enrollments e ON s.id = e.student_id
+    
     JOIN 
         Grade g ON e.enrollment_id = g.enrollment_id;
     """)
