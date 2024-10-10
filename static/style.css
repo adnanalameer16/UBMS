@@ -1,11 +1,247 @@
-#displayBox {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid black;
-    width: 200px;
-    height: 50px;
+:root {
+    --bg-color: #D0DAEC;         /* Background color */
+    --header-bg: #37414A;       /* Header background */
+    --sidebar-bg: #4A5864;      /* Sidebar background */
+    --button-bg: #50B8E7;       /* Button background */
+    --button-hover-bg: #00b5ad; /* Button hover background */
+    --text-color: #F0F0F0;      /* Text color */
+    --border-color: grey;        /* Border color */
+    --border-light: white;       /* Light border color */
 }
-#inputBox{
+
+
+dialog {
+    width: 300px;
+    padding: 20px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to bottom, #66c2ff, #e6f3ff);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.dialog-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+body {
+    background-color: var(--bg-color);
+}
+
+.header {
+    background-color: var(--header-bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.update-btn, .add-btn, .logout-btn{
+    display: none;
+}
+.btn-container{
+
+    display: flex;
+    justify-content: space-around;
+    width: 50%;
+}
+
+.logo-container{
+    margin-left: 24px;
+}
+
+.dark-container{
+    margin-right: 24px;
+}
+
+.sidebar {
+    color: var(--text-color);
+    background-color: var(--sidebar-bg);
+    position: fixed;
+    top: 10vh;
+    left: 0;
+    width: 10vw;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header button {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: var(--button-bg);
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 120px;
+    height: 35px;
+}
+
+.header button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+.sidebar button {
+    background-color: var(--sidebar-bg);
+    color: var(--text-color);
+    text-align: center;
+    cursor: pointer;
+    width: 100%; 
     height: 50px;
-    width: 200px;
+    border-bottom: 0.5px solid var(--border-light);
+}
+
+.sidebar button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+.main {
+    margin-left: 10vw;
+    margin-top: 12vh;
+    height: 82vh;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    padding: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #F0F0F0;
+}
+
+td {
+    padding: 10px;
+    text-align: center;
+    border-right: 0.5px solid var(--border-color);
+}
+
+td:last-child {
+    border-right: none;
+}
+
+tr:nth-child(even) {
+    background-color: #E5E7EB;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px; 
+
+}
+
+.login, .add-student{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    gap: 10px; 
+}
+
+.close-container{
+
+    width: 100%;
+    height: 3%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.login-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10%;
+    width: 100%;
+}
+
+.submit-container{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 24px;
+    width: 100%;
+    height: fit-content;
+}
+
+.submit{
+    background-color: var(--button-bg);
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 120px;
+    height: 35px;
+}
+
+.submit:hover {
+    background-color: var(--button-hover-bg);
+}
+
+/* -------------- */
+
+
+body {
+    background-color: var(--bg-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-theme {
+    --bg-color: #1a1a1a;         /* Dark background color */
+    --header-bg: #222222;       /* Dark header background */
+    --sidebar-bg: #333333;      /* Dark sidebar background */
+    --button-bg: #555555;       /* Dark button background */
+    --button-hover-bg: #666666; /* Dark button hover background */
+    --text-color: #ffffff;      /* Light text color */
+    --border-color: #444444;    /* Dark border color */
+    --border-light: #555555;     /* Dark light border color */
+}
+
+.header {
+    background-color: var(--header-bg);
+    transition: background-color 0.3s;
+}
+
+.sidebar {
+    color: var(--text-color);
+    background-color: var(--sidebar-bg);
+    transition: background-color 0.3s;
+}
+
+.dialog-div {
+    transition: background 0.3s;
+}
+
+.main {
+    transition: background-color 0.3s;
+}
+
+input, select {
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+input.dark-theme, select.dark-theme {
+    border: 1px solid #777;
+}
+
+label.dark-theme{
+    color: white;
+}
+
+dialog.dark-theme{
+    background: linear-gradient(to bottom, #333333, #1a1a1a);
+}
+
+body.dark-theme .header button,
+body.dark-theme .sidebar button,
+body.dark-theme .submit {
+    color: #ffffff;
 }

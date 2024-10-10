@@ -3,25 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Two Buttons, One Input Box, and a Display Box</title>
-<link rel="stylesheet"  href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>UBMS</title>
 </head>
 <body>
+    <div class="header">
 
-    <h2>Input and Display</h2>
+        <div class="logo-container">
+            <img class="logo" src="/static/logo-placeholder-image.png" alt="UBMS LOGO" height="50px" width="50px">
+        </div>
+        <div class="btn-container">
+            <button class="login-btn">Login</button>
+            <button class="add-btn">Add Student</button>
+            <button class="logout-btn">Logout</button>
+            <button class="update-btn">Update Student</button>
+        </div>
+        <div class="dark-container">
+            <img class="dark" src="/static/dark.png" alt="dark-mode-image" height="50px" width="50px">
+        </div>
 
-    <!-- Input Box -->
-    <label for="inputBox">Input Text:</label>
-    <input type="text" id="inputBox" name="inputBox">
-    <br><br>
-
-    <!-- Buttons -->
-    <button id="showButton" type="button">Show</button>
-    <button id="clearButton" type="button">Clear</button>
-
-    <!-- Display Box -->
-    <div id="displayBox">Your text will appear here</div>
-
+    </div>
+    <div class="sidebar">
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+    </div>
+    <div class="main">
+        <dialog class="add-dialog">
+            <div class="dialog-div">
+                <div class="close-container">
+                    <img class="close-btn" src="/static/close.png" alt="close button" height="25px" width="25px">
+                </div>
+                <div class="login-container">
+                    <img src="/static/add-user.png" alt="add Student" height="100px" width="100px">
+                </div>
+                <form method="dialog">
+                    <div class="add-student">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" required min="1" max="120">
+                    
+                        <label for="grade">Grade</label>
+                        <input type="text" id="grade" name="grade" required>
+                    
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select...</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>                    
+                </form>
+                <div class="submit-container">
+                    <button type="submit" class="submit-add submit">Add</button>
+                </div>
+            </div>
+        </dialog>
+        <dialog id="myDialog">
+            <div class="dialog-div">
+                <div class="close-container">
+                    <img class="close-btn" src="/static/close.png" alt="close button" height="25px" width="25px">
+                </div>
+                <div class="login-container">
+                    <img src="/static/login.png" alt="login icon" height="100px" width="100px">
+                </div>
+                <form method="dialog">
+                    <div class="login">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" minlength="8" pattern="^[a-zA-Z\d]{8,}$" required>
+                    </div>
+                </form>
+                <div class="submit-container">
+                    <button type="submit" class="submit">Login</button>
+                </div>
+            </div>
+        </dialog>
+        <table>
+            <tr>
+                <td>ADNAN</td>
+                <td>2</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td>20</td>
+                <td>21</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>23</td>
+                <td>24</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td>26</td>
+                <td>27</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td>29</td>
+                <td>30</td>
+            </tr>
+            <tr>
+                <td>31</td>
+                <td>32</td>
+                <td>33</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td>35</td>
+                <td>36</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td>38</td>
+                <td>39</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td>41</td>
+                <td>42</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td>44</td>
+                <td>45</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td>47</td>
+                <td>48</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td>50</td>
+                <td>51</td>
+            </tr>
+            <tr>
+                <td>52</td>
+                <td>53</td>
+                <td>54</td>
+            </tr>
+            <tr>
+                <td>55</td>
+                <td>56</td>
+                <td>57</td>
+            </tr>
+            <tr>
+                <td>58</td>
+                <td>59</td>
+                <td>60</td>
+            </tr>
+            <tr>
+                <td>61</td>
+                <td>62</td>
+                <td>63</td>
+            </tr>
+            <tr>
+                <td>64</td>
+                <td>65</td>
+                <td>66</td>
+            </tr>
+            <tr>
+                <td>67</td>
+                <td>68</td>
+                <td>69</td>
+            </tr>
+            <tr>
+                <td>70</td>
+                <td>71</td>
+                <td>72</td>
+            </tr>
+            <tr>
+                <td>73</td>
+                <td>74</td>
+                <td>75</td>
+            </tr>
+            <tr>
+                <td>76</td>
+                <td>77</td>
+                <td>78</td>
+            </tr>
+            <tr>
+                <td>79</td>
+                <td>80</td>
+                <td>81</td>
+            </tr>
+            <tr>
+                <td>82</td>
+                <td>83</td>
+                <td>84</td>
+            </tr>
+            <tr>
+                <td>85</td>
+                <td>86</td>
+                <td>87</td>
+            </tr>
+            <tr>
+                <td>88</td>
+                <td>89</td>
+                <td>90</td>
+            </tr>
+            <tr>
+                <td>91</td>
+                <td>92</td>
+                <td>93</td>
+            </tr>
+            <tr>
+                <td>94</td>
+                <td>95</td>
+                <td>96</td>
+            </tr>
+            <tr>
+                <td>97</td>
+                <td>98</td>
+                <td>99</td>
+            </tr>
+        </table>
+    </div>
+    
     <script src="/static/script.js"></script>
 </body>
 </html>
