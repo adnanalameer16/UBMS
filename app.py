@@ -270,4 +270,4 @@ def create_view():
   #  result= db.session.execute(sql)
    # return result.fetchall().__str__()
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='192.168.1.10',port='5500')

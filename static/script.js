@@ -10,7 +10,7 @@ function submitData() {
     console.log(jsonData);
 
     // Make POST request to Flask
-    fetch('http://127.0.0.1:5000/addstudent1', {
+    fetch('http://192.168.1.10:5500/addstudent1', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -30,8 +30,37 @@ function submitData() {
 // Add event listener to the "Show" button
 document.querySelector('#showButton').addEventListener('click', submitData);
 
-// Optional: Add event listener to clear the text
-//document.querySelector('#clearButton').addEventListener('click', function() {
-    //document.querySelector('#inputBox').value = '';
-   // document.querySelector('#displayBox').innerText = 'Your text will appear here';
-//});
+function fetchAndDisplayStudents() {
+    const displayBox = document.querySelector('#displayBox');  // Element to display data
+
+    // Fetch data from the Flask route
+    fetch('////', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())  // Parse the response as JSON
+    .then(data => {
+        // Clear the display box before showing new data
+        displayBox.innerHTML = '';
+
+        // Iterate over the fetched data and display each student
+        data.forEach(student => {
+            // Create a new div for each student
+            const studentDiv = document.createElement('div');
+            studentDiv.textContent = `ID: ${student.id}, Name: ${student.fname} ${student.lname}, Email: ${student.email}`;
+            
+            // Append each student div to the display box
+            displayBox.appendChild(studentDiv);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        displayBox.innerText = 'Error occurred: ' + error;
+    });
+}
+
+// Call the function to fetch and display students when needed
+fetchAndDisplayStudents();
+
