@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask,jsonify, render_template, make_response,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import text
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import json
 # Initialize Flask application
 app = Flask(__name__,static_url_path='/static',template_folder='templates')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///universityDB.db'  # Replace with your database URI
@@ -63,8 +63,8 @@ class Enrollments(db.Model):
     def __repr__(self):
         return f'<Enrollments {self.student_id} {self.class_id}>'
 class Grade(db.Model):
-    enrollment_id = db.Column(db.Integer, primary_key=False)
-    subject = db.Column(db.String(100), primary_key=False)
+    enrollment_id = db.Column(db.Integer, primary_key=True)
+    subject = db.Column(db.String(100), primary_key=True)
     grade = db.Column(db.String(100), nullable=False)
     grade_date = db.Column(db.String(100), primary_key=False)
     def __repr__(self):
@@ -77,7 +77,7 @@ def index():
 def add_student():
     # Sample student data
     data=request.get_json()
-    student_id = data.get('student_id')
+    student_id = data.get('id')
     fname = data.get('fname')
     lname = data.get('lname')
     dob = data.get('dob')
@@ -97,6 +97,7 @@ def add_student():
         enroll_date=enroll_date,
         class_id=class_id
     )
+    print(new_student)
 
     # Add the student to the session and commit
     db.session.add(new_student)
@@ -269,5 +270,16 @@ def create_view():
  #   sql = text('SELECT * FROM view1')
   #  result= db.session.execute(sql)
    # return result.fetchall().__str__()
+@app.route('/displaytest')
+def displaytest():
+    sql = text('SELECT id,fname,lname  FROM student')
+    result= db.session.execute(sql)
+    print(result)
+
+    data = [{column: row[i] for i, column in enumerate(result.keys())} for row in result]
+
+    print(jsonify(data))
+
+    return result.fetchall().__str__()
 if __name__ == '__main__':
     app.run(debug=True)
