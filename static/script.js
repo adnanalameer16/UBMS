@@ -31,6 +31,7 @@ closeAddButton.addEventListener("click", () => {
 
 submitButton.addEventListener("click", () => {
     dialog_login.close();
+    //submitData();
     inputs.forEach(input => input.value="");
     updateButton.style.display = 'block';
     addButton.style.display = 'block';
@@ -44,6 +45,13 @@ logoutButton.addEventListener("click", () => {
     logoutButton.style.display = 'none';
     loginButton.style.display = 'block';
 });
+
+submitadd.addEventListener("click",()=>{
+    submitData()
+    dialog_add.close();
+
+    inputs.forEach(input => input.value="");
+})
 
 /* ---------- */
 
@@ -62,81 +70,25 @@ darkImage.addEventListener('click', () => {
 });
 
 
-const form = document.getElementById('add-student-form');
-const forminputs = form.querySelectorAll('input');
-
-function validateInputs() {
-    let formIsValid = true;
-
-    inputs.forEach(input => {
-        if (!input.validity.valid) {
-            input.classList.add('invalid');
-            input.classList.remove('valid');
-            formIsValid = false;
-        } else {
-            input.classList.remove('invalid');
-            input.classList.add('valid');
-        }
-    });
-
-    return formIsValid;
-}
-
-submitButton.addEventListener('click', (event) => {
-    event.preventDefault();
-    const formIsValid = validateInputs();
-    console.log("entered")
-
-    if (formIsValid) {
-        const formData = new FormData(form);
-
-        console.log('Form validity:', formIsValid);
-        console.log('Form data:', Array.from(formData.entries()));
-
-        fetch('http://127.0.0.1:5500/addstudent', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text())
-        .then(data => {
-            console.log(data);
-            alert('Student added successfully!');
-            dialog_add.close();
-            inputs.forEach(input => input.value = "");
-            inputs.forEach(input => input.classList.remove('valid', 'invalid'));
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while adding the student.');
-        });
-    } else {
-        alert('Please fill in all required fields correctly.');
-    }
-});
-
-inputs.forEach(input => {
-    input.addEventListener('input', () => {
-        validateInputs();
-    });
-});
-
-inputs.forEach(input => {
-    input.classList.remove('valid', 'invalid');
-});
-
-
-/*
 // Function to handle form submission
 function submitData() {
-    const inputText = document.querySelector('input').value; // Get input text
-    
-    // Prepare the data as an object
+    // Get input text
+    const id = document.querySelector('#id').value;
+    const fname = document.querySelector('#fname').value;
+    const lname = document.querySelector('#lname').value;
+    const email = document.querySelector('#emailstudent').value;
+    const dob = document.querySelector('#dob').value;
+    const phone = document.querySelector('#phone').value;
+    const enroll_date = document.querySelector('#enroll_date').value;
+    const class_id =document.querySelector('#class_id').value;
+       // Prepare the data as an object
     const jsonData = {
-        "student_data": inputText  // Send input string as a property
+        "id":id,"fname":fname,"lname":lname,"email":email,"dob":dob,"phone":phone,"enroll_date":enroll_date,"class_id":class_id
+        // Send input string as a property
     };
 
     // Make POST request to Flask
-    fetch('http://192.168.1.10:5500/addstudent1', {
+    fetch('http://127.0.0.1:5000/addstudent', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -152,40 +104,81 @@ function submitData() {
         console.log('Error occurred: ' + error);
     });
 }
-// Add event listener to the "Show" button
-document.querySelector('#showButton').addEventListener('click', submitData);
+
 
 function fetchAndDisplayStudents() {
-    const displayBox = document.querySelector('#displayBox');  // Element to display data
+    const tableBody = document.getElementById('studentTableBody');
 
-    // Fetch data from the Flask route
-    fetch('////', {
+    fetch('/api/get_students', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())  // Parse the response as JSON
+    .then(response => response.json())
     .then(data => {
-        // Clear the display box before showing new data
-        displayBox.innerHTML = '';
+        tableBody.innerHTML = '';
 
-        // Iterate over the fetched data and display each student
         data.forEach(student => {
-            // Create a new div for each student
-            const studentDiv = document.createElement('div');
-            studentDiv.textContent = `ID: ${student.id}, Name: ${student.fname} ${student.lname}, Email: ${student.email}`;
-            
-            // Append each student div to the display box
-            displayBox.appendChild(studentDiv);
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = student.id;
+            row.appendChild(idCell);
+
+            const fnameCell = document.createElement('td');
+            fnameCell.textContent = student.fname;
+            row.appendChild(fnameCell);
+
+            const lnameCell = document.createElement('td');
+            lnameCell.textContent = student.lname;
+            row.appendChild(lnameCell);
+
+            tableBody.appendChild(row);
         });
     })
     .catch(error => {
         console.error('Error:', error);
-        displayBox.innerText = 'Error occurred: ' + error;
+        tableBody.innerHTML = `<tr><td colspan="3">Error occurred: ${error}</td></tr>`;
     });
 }
 
-// Call the function to fetch and display students when needed
-fetchAndDisplayStudents();
+
+/*
+function fetchAndDisplayStudents() {
+    const tableBody = document.getElementById('studentTableBody');
+
+    fetch('/api/get_students', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        tableBody.innerHTML = '';
+
+        data.forEach(student => {
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = student[0];
+            row.appendChild(idCell);
+
+            const fnameCell = document.createElement('td');
+            fnameCell.textContent = student[1];
+            row.appendChild(fnameCell);
+
+            const lnameCell = document.createElement('td');
+            lnameCell.textContent = student[2];
+            row.appendChild(lnameCell);
+
+            tableBody.appendChild(row);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        tableBody.innerHTML = `<tr><td colspan="3">Error occurred: ${error}</td></tr>`;
+    });
+}
 */
