@@ -1,20 +1,32 @@
 :root {
-    --bg-color: #D0DAEC;         /* Background color */
+    --bg-color: #a6b1bc;         /* Background color */
     --header-bg: #37414A;       /* Header background */
     --sidebar-bg: #4A5864;      /* Sidebar background */
-    --button-bg: #50B8E7;       /* Button background */
-    --button-hover-bg: #00b5ad; /* Button hover background */
+    --button-bg: #7cb9e8;       /* Button background */
+    --button-hover-bg: #7cb9e8; /* Button hover background */
     --text-color: #F0F0F0;      /* Text color */
-    --border-color: grey;        /* Border color */
-    --border-light: white;       /* Light border color */
+    --border-color: rgba(128, 128, 128, 0.25);        /* Border color */
+    --border-light: rgba(255, 255, 255, 0.26);
+    /* Light border color */
 }
+
+.invalid {
+    border: 2px solid red;
+    background-color: #ffe6e6;
+}
+
+.valid {
+    border: 2px solid green;
+    background-color: #e6ffe6;
+}
+
 
 
 dialog {
     width: 300px;
     padding: 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px;
     background: linear-gradient(to bottom, #66c2ff, #e6f3ff);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
@@ -78,7 +90,8 @@ body {
     margin: 10px 0;
     background-color: var(--button-bg);
     text-align: center;
-    border-radius: 5px;
+    border-radius: 10px;
+    border: none;
     cursor: pointer;
     width: 120px;
     height: 35px;
@@ -95,7 +108,9 @@ body {
     cursor: pointer;
     width: 100%; 
     height: 50px;
-    border-bottom: 0.5px solid var(--border-light);
+    border-bottom: 0.1px solid var(--border-light);
+    border-right: none;
+    border-top: none;
 }
 
 .sidebar button:hover {
@@ -114,13 +129,14 @@ body {
 table {
     width: 100%;
     border-collapse: collapse;
+
     background-color: #F0F0F0;
 }
 
 td {
     padding: 10px;
     text-align: center;
-    border-right: 0.5px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
 }
 
 td:last-child {

@@ -52,7 +52,7 @@ class Courses(db.Model):
     course_id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(100), nullable=False)
     department_id = db.Column(db.Integer, nullable=False)
-    credits = db.Column(db.Integer, nullable=False),
+    credits = db.Column(db.Integer, nullable=False)
     semester = db.Column(db.String(100), nullable=False)
     def __repr__(self):
         return f'<Course {self.name}>'
@@ -74,22 +74,21 @@ class Grades(db.Model):
 def index():
     return render_template('index.html')
 
-@app.route('/addstudent',methods=['POST'])
+
+
+@app.route('/addstudent', methods=['POST'])
 def add_student():
-    # Sample student data
-    data=request.get_json()
-    student_id = data.get('student_id')
-    fname = data.get('fname')
-    lname = data.get('lname')
-    dob = data.get('dob')
-    email = data.get('email')
-    phone = data.get('phone')
-    enroll_date = data.get('enroll_date')
-    class_id = data.get('class_id')
+    # Use request.form.get to retrieve data from the form
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    dob = request.form.get('dob')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    enroll_date = request.form.get('enroll_date')
+    class_id = request.form.get('class_id')
 
     # Create a new student instance
     new_student = Student(
-        id=student_id,
         fname=fname,
         lname=lname,
         dob=dob,
@@ -106,7 +105,7 @@ def add_student():
     return "Student added successfully!"
 @app.route('/addstudent1',methods=['POST'])
 def test():
-    data=request.get_json()
+    email=request.form.get('email')
     print(data)
     return "Student added successfully!"
 @app.route('/addclass')
@@ -231,4 +230,4 @@ def display_view():
     result= db.session.execute(sql)
     return result.fetchall().__str__()
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.1.10',port='5500')
+    app.run(debug=True, host='127.0.0.1',port='5500')

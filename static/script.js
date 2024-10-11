@@ -45,11 +45,6 @@ logoutButton.addEventListener("click", () => {
     loginButton.style.display = 'block';
 });
 
-submitadd.addEventListener("click",()=>{
-    dialog_add.close();
-    inputs.forEach(input => input.value="");
-})
-
 /* ---------- */
 
 const darkImage = document.querySelector('.dark');
@@ -65,6 +60,70 @@ darkImage.addEventListener('click', () => {
     dialogs.forEach(dialog => dialog.classList.toggle('dark-theme'));
     labels.forEach(label => label.classList.toggle('dark-theme'));
 });
+
+
+const form = document.getElementById('add-student-form');
+const forminputs = form.querySelectorAll('input');
+
+function validateInputs() {
+    let formIsValid = true;
+
+    inputs.forEach(input => {
+        if (!input.validity.valid) {
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+            formIsValid = false;
+        } else {
+            input.classList.remove('invalid');
+            input.classList.add('valid');
+        }
+    });
+
+    return formIsValid;
+}
+
+submitButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    const formIsValid = validateInputs();
+    console.log("entered")
+
+    if (formIsValid) {
+        const formData = new FormData(form);
+
+        console.log('Form validity:', formIsValid);
+        console.log('Form data:', Array.from(formData.entries()));
+
+        fetch('http://127.0.0.1:5500/addstudent', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);
+            alert('Student added successfully!');
+            dialog_add.close();
+            inputs.forEach(input => input.value = "");
+            inputs.forEach(input => input.classList.remove('valid', 'invalid'));
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding the student.');
+        });
+    } else {
+        alert('Please fill in all required fields correctly.');
+    }
+});
+
+inputs.forEach(input => {
+    input.addEventListener('input', () => {
+        validateInputs();
+    });
+});
+
+inputs.forEach(input => {
+    input.classList.remove('valid', 'invalid');
+});
+
 
 /*
 // Function to handle form submission
