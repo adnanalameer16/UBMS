@@ -9,6 +9,11 @@ const updateButton = document.querySelector('.update-btn');
 const addButton = document.querySelector('.add-btn');
 const submitadd = document.querySelector('.submit-add');
 const dark = document.querySelector('.dark');
+const  viewStudent = document.querySelector('.view-student');
+const viewClass = document.querySelector('.view-class');
+const viewDepartment = document.querySelector('.view-department');
+const viewFaculty = document.querySelector('.view-faculty');
+//const viewCourses = document.querySelector('.view-courses');
 const labels=document.querySelectorAll('label')
 const inputs=document.querySelectorAll('input')
 
@@ -38,6 +43,18 @@ submitButton.addEventListener("click", () => {
     logoutButton.style.display = 'block';
     loginButton.style.display = 'none';
 });
+
+viewStudent.addEventListener("click", () => {
+    fetchAndDisplayStudents();
+
+
+
+});
+viewClass.addEventListener('click', fetchAndDisplayClasses);
+viewDepartment.addEventListener('click', fetchAndDisplayDepartments);
+viewFaculty.addEventListener('click', fetchAndDisplayFaculties);
+viewCourses.addEventListener('click', fetchAndDisplayCourses);
+
 
 logoutButton.addEventListener("click", () => {
     updateButton.style.display = 'none';
@@ -104,41 +121,225 @@ function submitData() {
         console.log('Error occurred: ' + error);
     });
 }
-/*
-// Add event listener to the "Show" button
-document.querySelector('#showButton').addEventListener('click', submitData);
+
 
 function fetchAndDisplayStudents() {
-    const displayBox = document.querySelector('#displayBox');  // Element to display data
+    const tableBody = document.getElementById('studentTableBody');
 
-    // Fetch data from the Flask route
-    fetch('////', {
+    fetch('http://127.0.0.1:5000/viewstudent', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())  // Parse the response as JSON
+    .then(response => response.json())
     .then(data => {
-        // Clear the display box before showing new data
-        displayBox.innerHTML = '';
+        tableBody.innerHTML = '';
 
-        // Iterate over the fetched data and display each student
         data.forEach(student => {
-            // Create a new div for each student
-            const studentDiv = document.createElement('div');
-            studentDiv.textContent = `ID: ${student.id}, Name: ${student.fname} ${student.lname}, Email: ${student.email}`;
-            
-            // Append each student div to the display box
-            displayBox.appendChild(studentDiv);
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = student.id;
+            row.appendChild(idCell);
+
+            const fnameCell = document.createElement('td');
+            fnameCell.textContent = student.fname;
+            row.appendChild(fnameCell);
+
+            const lnameCell = document.createElement('td');
+            lnameCell.textContent = student.lname;
+            row.appendChild(lnameCell);
+
+            const dobCell = document.createElement('td');
+            dobCell.textContent = student.dob;
+            row.appendChild(dobCell);
+
+            const emailCell = document.createElement('td');
+            emailCell.textContent = student.email;
+            row.appendChild(emailCell);
+
+            const phoneCell = document.createElement('td');
+            phoneCell.textContent = student.phone;
+            row.appendChild(phoneCell);
+
+            const enroll_dateCell = document.createElement('td');
+            enroll_dateCell.textContent = student.enroll_date;
+            row.appendChild(enroll_dateCell);
+
+            const class_idCell = document.createElement('td');
+            class_idCell.textContent = student.class_id;
+            row.appendChild(class_idCell);
+
+            tableBody.appendChild(row);
         });
     })
     .catch(error => {
         console.error('Error:', error);
-        displayBox.innerText = 'Error occurred: ' + error;
+        tableBody.innerHTML = `<tr><td colspan="3">Error occurred: ${error}</td></tr>`;
     });
 }
 
-// Call the function to fetch and display students when needed
-fetchAndDisplayStudents();
+function fetchAndDisplayClasses() {
+    const tableBody = document.getElementById('classTableBody');
+
+    fetch('http://127.0.0.1:5000/viewclass', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        tableBody.innerHTML = '';
+
+        data.forEach(c => {
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = c.id;
+            row.appendChild(idCell);
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = c.name;
+            row.appendChild(nameCell);
+
+            const course_idCell = document.createElement('td');
+            course_idCell.textContent = c.course_id;
+            row.appendChild(course_idCell);
+
+            const faculty_idCell = document.createElement('td');
+            faculty_idCell.textContent = c.faculty_id;
+            row.appendChild(faculty_idCell);
+
+            tableBody.appendChild(row);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        tableBody.innerHTML = `<tr><td colspan="3">Error occurred: ${error}</td></tr>`;
+    });
+}
+function fetchAndDisplayDepartments() {
+    const tableBody = document.getElementById('departmentTableBody');
+
+    fetch('http://127.0.0.1:5000/viewdepartment', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        tableBody.innerHTML = '';
+
+        data.forEach(department => {
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = department.id;
+            row.appendChild(idCell);
+
+            const nameCell = document.createElement('td');
+            nameCell.textContent = department.name;
+            row.appendChild(nameCell);
+
+            const headCell = document.createElement('td');
+            headCell.textContent = department.head;
+            row.appendChild(headCell);
+
+            tableBody.appendChild(row);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        tableBody.innerHTML = `<tr><td colspan="3">Error occurred: ${error}</td></tr>`;
+    });
+}
+function fetchAndDisplayFaculties() {
+    const tableBody = document.getElementById('facultyTableBody');
+
+    fetch('http://127.0.0.1:5000/viewfaculty', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        tableBody.innerHTML = '';
+
+        data.forEach(faculty => {
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = faculty.id;
+            row.appendChild(idCell);
+
+            const fnameCell = document.createElement('td');
+            fnameCell.textContent = faculty.fname;
+            row.appendChild(fnameCell);
+
+            const lnameCell = document.createElement('td');
+            lnameCell.textContent = faculty.lname;
+            row.appendChild(lnameCell);
+
+            const emailCell = document.createElement('td');
+            emailCell.textContent = faculty.email;
+            row.appendChild(emailCell);
+
+            const phoneCell = document.createElement('td');
+            phoneCell.textContent = faculty.phone;
+            row.appendChild(phoneCell);
+
+            const department_idCell = document.createElement('td');
+            department_idCell.textContent = faculty.department_id;
+            row.appendChild(department_idCell);
+
+            tableBody.appendChild(row);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        tableBody.innerHTML = `<tr><td colspan="3">Error occurred: ${error}</td></tr>`;
+    });
+}
+
+/*
+function fetchAndDisplayStudents() {
+    const tableBody = document.getElementById('studentTableBody');
+
+    fetch('/api/get_students', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        tableBody.innerHTML = '';
+
+        data.forEach(student => {
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = student[0];
+            row.appendChild(idCell);
+
+            const fnameCell = document.createElement('td');
+            fnameCell.textContent = student[1];
+            row.appendChild(fnameCell);
+
+            const lnameCell = document.createElement('td');
+            lnameCell.textContent = student[2];
+            row.appendChild(lnameCell);
+
+            tableBody.appendChild(row);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        tableBody.innerHTML = `<tr><td colspan="3">Error occurred: ${error}</td></tr>`;
+    });
+}
 */
