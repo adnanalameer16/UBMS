@@ -1,4 +1,4 @@
-from flask import Flask,jsonify, render_template, make_response,request
+from flask import Flask, render_template, jsonify,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import text
@@ -271,15 +271,19 @@ def create_view():
   #  result= db.session.execute(sql)
    # return result.fetchall().__str__()
 @app.route('/displaytest')
-def displaytest():
-    sql = text('SELECT id,fname,lname  FROM student')
-    result= db.session.execute(sql)
-    print(result)
-
-    data = [{column: row[i] for i, column in enumerate(result.keys())} for row in result]
-
-    print(jsonify(data))
-
-    return result.fetchall().__str__()
-if __name__ == '__main__':
-    app.run(debug=True)
+def display_test():
+    students = Student.query.all()
+    student_data = []
+    for student in students:
+        student_dict = {
+            'id': student.id,
+            'fname': student.fname,
+            'lname': student.lname,
+            'dob': student.dob,
+            'email': student.email,
+            'phone': student.phone,
+            'enroll_date': student.enroll_date,
+            'class_id': student.class_id
+        }
+        student_data.append(student_dict)
+    return jsonify(student_data)
