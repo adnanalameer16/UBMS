@@ -280,6 +280,7 @@ def display_test():
     students = Student.query.all()
     student_data = []
     for student in students:
+        c=Class.query.filter_by(id=student.class_id).first()
         student_dict = {
             'id': student.id,
             'fname': student.fname,
@@ -288,7 +289,7 @@ def display_test():
             'email': student.email,
             'phone': student.phone,
             'enroll_date': student.enroll_date,
-            'class_id': student.class_id
+            'class_id': c.name
         }
         student_data.append(student_dict)
     return jsonify(student_data)
@@ -298,11 +299,13 @@ def display_class():
 
     class_data = []
     for class1 in classes:
+        f = faculty.query.filter_by(id=class1.faculty_id).first()
+        c= Courses.query.filter_by(course_id=class1.course_id).first()
         class_dict = {
             'id': class1.id,
             'name': class1.name,
-            'course_id': class1.course_id,
-            'faculty_id': class1.faculty_id
+            'course_id': c.course_name,
+            'faculty_id': f.fname
         }
         class_data.append(class_dict)
     return jsonify(class_data)
@@ -311,25 +314,28 @@ def display_faculty():
     faculties = faculty.query.all()
     faculty_data = []
     for faculty1 in faculties:
+        d=Department.query.filter_by(id=faculty1.department_id).first()
         faculty_dict = {
             'id': faculty1.id,
             'fname': faculty1.fname,
             'lname': faculty1.lname,
             'email': faculty1.email,
             'phone': faculty1.phone,
-            'department_id': faculty1.department_id
+            'department_id': d.name
         }
         faculty_data.append(faculty_dict)
     return jsonify(faculty_data)
 @app.route('/viewdepartment')
 def display_department():
     departments = Department.query.all()
+
     department_data = []
     for department in departments:
+        h=faculty.query.filter_by(id=department.head).first()
         department_dict = {
             'id': department.id,
             'name': department.name,
-            'head': department.head
+            'head': h.fname + " " + h.lname
         }
         department_data.append(department_dict)
     return jsonify(department_data)
@@ -342,6 +348,6 @@ def verify_login():
 
     user = Authentication.query.filter_by(email=email).first()
     if user and user.password == password:
-        return "Login successful!"
+        return {"status":True}
     else:
-        return "Login failed!"
+        return {"status":False}
