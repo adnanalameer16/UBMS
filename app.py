@@ -69,6 +69,11 @@ class Grade(db.Model):
     grade_date = db.Column(db.String(100), primary_key=False)
     def __repr__(self):
         return f'<Grades {self.student_id} {self.class_id}>'
+class Authentication(db.Model):
+    email = db.Column(db.String(100), nullable=False,primary_key=True)
+    password = db.Column(db.String(100), nullable=False)
+    def __repr__(self):
+        return f'<Authentication {self.email}>'
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -270,7 +275,7 @@ def create_view():
  #   sql = text('SELECT * FROM view1')
   #  result= db.session.execute(sql)
    # return result.fetchall().__str__()
-@app.route('/displaytest')
+@app.route('/viewstudent')
 def display_test():
     students = Student.query.all()
     student_data = []
@@ -287,3 +292,56 @@ def display_test():
         }
         student_data.append(student_dict)
     return jsonify(student_data)
+@app.route('/viewclass')
+def display_class():
+    classes = Class.query.all()
+
+    class_data = []
+    for class1 in classes:
+        class_dict = {
+            'id': class1.id,
+            'name': class1.name,
+            'course_id': class1.course_id,
+            'faculty_id': class1.faculty_id
+        }
+        class_data.append(class_dict)
+    return jsonify(class_data)
+@app.route('/viewfaculty')
+def display_faculty():
+    faculties = faculty.query.all()
+    faculty_data = []
+    for faculty1 in faculties:
+        faculty_dict = {
+            'id': faculty1.id,
+            'fname': faculty1.fname,
+            'lname': faculty1.lname,
+            'email': faculty1.email,
+            'phone': faculty1.phone,
+            'department_id': faculty1.department_id
+        }
+        faculty_data.append(faculty_dict)
+    return jsonify(faculty_data)
+@app.route('/viewdepartment')
+def display_department():
+    departments = Department.query.all()
+    department_data = []
+    for department in departments:
+        department_dict = {
+            'id': department.id,
+            'name': department.name,
+            'head': department.head
+        }
+        department_data.append(department_dict)
+    return jsonify(department_data)
+
+@app.route('/verifylogin', methods=['POST'])
+def verify_login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    user = Authentication.query.filter_by(email=email).first()
+    if user and user.password == password:
+        return "Login successful!"
+    else:
+        return "Login failed!"
