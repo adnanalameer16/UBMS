@@ -31,6 +31,7 @@ closeAddButton.addEventListener("click", () => {
 
 submitButton.addEventListener("click", () => {
     dialog_login.close();
+    submitData();
     inputs.forEach(input => input.value="");
     updateButton.style.display = 'block';
     addButton.style.display = 'block';
@@ -66,18 +67,20 @@ darkImage.addEventListener('click', () => {
     labels.forEach(label => label.classList.toggle('dark-theme'));
 });
 
-/*
+
 // Function to handle form submission
 function submitData() {
-    const inputText = document.querySelector('input').value; // Get input text
-    
+     // Get input text
+    const email=document.querySelector('.emaillogin').value;
+    const password=document.querySelector('.password').value;
     // Prepare the data as an object
     const jsonData = {
-        "student_data": inputText  // Send input string as a property
+        "email":email,"password":password
+        // Send input string as a property
     };
 
     // Make POST request to Flask
-    fetch('http://192.168.1.10:5500/addstudent1', {
+    fetch('http://127.0.0.1:5000/addLogin', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -93,6 +96,7 @@ function submitData() {
         console.log('Error occurred: ' + error);
     });
 }
+/*
 // Add event listener to the "Show" button
 document.querySelector('#showButton').addEventListener('click', submitData);
 
