@@ -24,10 +24,12 @@
 
     </div>
     <div class="sidebar">
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
+      <button type="button" class="view-student">Students</button>
+    <button type="button" class="view-class">Classes</button>
+    <button type="button" class="view-department">Departments</button>
+    <button type="button" class="view-faculty">Faculties</button>
+    <button type="button" class="view-courses">Courses</button>
+
     </div>
     <div class="main">
         <dialog class="add-dialog">
@@ -91,12 +93,8 @@
             </div>
         </dialog>
         <table>
-            <thead>
-                <tr>
-                    <td>ID</td>
-                    <td>FNAME</td>
-                    <td>LNAME</td>
-                </tr>
+            <thead id="table-head">
+
             </thead>
             <tbody id="studentTableBody">
                 

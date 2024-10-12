@@ -1,4 +1,4 @@
-from flask import Flask,jsonify, render_template, make_response,request
+from flask import Flask, render_template, jsonify,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import text
@@ -52,7 +52,7 @@ class Courses(db.Model):
     course_id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(100), nullable=False)
     department_id = db.Column(db.Integer, nullable=False)
-    credits = db.Column(db.Integer, nullable=False),
+    credits = db.Column(db.Integer, nullable=False)
     semester = db.Column(db.String(100), nullable=False)
     def __repr__(self):
         return f'<Course {self.name}>'
@@ -69,6 +69,11 @@ class Grade(db.Model):
     grade_date = db.Column(db.String(100), primary_key=False)
     def __repr__(self):
         return f'<Grades {self.student_id} {self.class_id}>'
+class Authentication(db.Model):
+    email = db.Column(db.String(100), nullable=False,primary_key=True)
+    password = db.Column(db.String(100), nullable=False)
+    def __repr__(self):
+        return f'<Authentication {self.email}>'
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -270,16 +275,103 @@ def create_view():
  #   sql = text('SELECT * FROM view1')
   #  result= db.session.execute(sql)
    # return result.fetchall().__str__()
-@app.route('/displaytest')
-def displaytest():
-    sql = text('SELECT id,fname,lname  FROM student')
-    result= db.session.execute(sql)
-    print(result)
+@app.route('/viewstudent')
+def display_test():
+    students = Student.query.all()
+    student_data = []
+    for student in students:
+        c=Class.query.filter_by(id=student.class_id).first()
+        student_dict = {
+            'id': student.id,
+            'fname': student.fname,
+            'lname': student.lname,
+            'dob': student.dob,
+            'email': student.email,
+            'phone': student.phone,
+            'enroll_date': student.enroll_date,
+            'class_id': c.name
+        }
+        student_data.append(student_dict)
+    return jsonify(student_data)
+@app.route('/viewclass')
+def display_class():
+    classes = Class.query.all()
 
-    data = [{column: row[i] for i, column in enumerate(result.keys())} for row in result]
+    class_data = []
+    for class1 in classes:
+        f = faculty.query.filter_by(id=class1.faculty_id).first()
+        c= Courses.query.filter_by(course_id=class1.course_id).first()
+        class_dict = {
+            'id': class1.id,
+            'name': class1.name,
+            'course_id': c.course_name,
+            'faculty_id': f.fname
+        }
+        class_data.append(class_dict)
+    return jsonify(class_data)
 
-    print(jsonify(data))
+@app.route('/viewfaculty')
+def display_faculty():
+    faculties = faculty.query.all()
+    faculty_data = []
+    for faculty1 in faculties:
+        d=Department.query.filter_by(id=faculty1.department_id).first()
+        faculty_dict = {
+            'id': faculty1.id,
+            'fname': faculty1.fname,
+            'lname': faculty1.lname,
+            'email': faculty1.email,
+            'phone': faculty1.phone,
+            'department_id': d.name
+        }
+        faculty_data.append(faculty_dict)
+    return jsonify(faculty_data)
+@app.route('/viewdepartment')
+def display_department():
+    departments = Department.query.all()
 
-    return result.fetchall().__str__()
-if __name__ == '__main__':
-    app.run(debug=True)
+    department_data = []
+    for department in departments:
+        h=faculty.query.filter_by(id=department.head).first()
+        department_dict = {
+            'id': department.id,
+            'name': department.name,
+            'head': h.fname + " " + h.lname
+        }
+        department_data.append(department_dict)
+    return jsonify(department_data)
+
+@app.route('/viewcourses')
+def view_courses():
+    courses = Courses.query.all()
+    course_data = []
+
+    for course in courses:
+
+        department = Department.query.filter_by(id=course.department_id).first()
+
+        course_dict = {
+            'id': course.course_id,
+            'name': course.course_name,
+            'department_id': department.name,
+            'credits': course.credits,
+            'semester': course.semester
+        }
+        course_data.append(course_dict)
+    return jsonify(course_data)
+
+
+@app.route('/verifylogin', methods=['POST'])
+def verify_login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    user = Authentication.query.filter_by(email=email).first()
+    if user and user.password == password:
+        return {"status":True}
+    else:
+        return {"status":False}
+    
+if __name__ == "__main__":
+    app.run(debug=True,host="127.0.0.1",port="5500")
