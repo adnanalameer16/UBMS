@@ -11,6 +11,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///universityDB.db'  # Replace w
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+class Authentication(db.Model):
+    email = db.Column(db.String(100), nullable=False,primary_key=True)
+    password_hash = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f'<Authentication {self.email}>'
 # Define the Student model
 class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -78,11 +84,13 @@ class Authentication(db.Model):
 def index():
     return render_template('index.html')
 
-@app.route('/addstudent',methods=['POST'])
+
+
+@app.route('/addstudent', methods=['POST'])
 def add_student():
     # Sample student data
     data=request.get_json()
-    student_id = data.get('id')
+    student_id = data.get('student_id')
     fname = data.get('fname')
     lname = data.get('lname')
     dob = data.get('dob')
@@ -93,7 +101,7 @@ def add_student():
 
     # Create a new student instance
     new_student = Student(
-        id=student_id,
+        id=id,
         fname=fname,
         lname=lname,
         dob=dob,
@@ -111,8 +119,8 @@ def add_student():
     return "Student added successfully!"
 @app.route('/addstudent1',methods=['POST'])
 def test():
-    data=request.get_json()
-    print(data)
+    email=request.form.get('email')
+
     return "Student added successfully!"
 @app.route('/addclass', methods=['POST'])
 def add_class():
@@ -234,6 +242,21 @@ def display_students():
     return result.fetchall().__str__()
 from sqlalchemy.sql import text
 
+@app.route('/addLogin',methods=['POST'])
+def add_login():
+
+    data=request.get_json()
+    print(data)
+    email = data.get('email')
+    password = data.get('password')
+
+    new_login = Authentication(
+        email=email,
+        password_hash=password
+    )
+    db.session.add(new_login)
+    db.session.commit()
+    return "Login added successfully!",200
 @app.route('/createview')
 def create_view():
     view_sql =text( """
@@ -270,108 +293,10 @@ def create_view():
         Grade g ON e.enrollment_id = g.enrollment_id;
     """)
     db.session.execute(view_sql)
-#@app.route('/displayview')
-#def display_view():
- #   sql = text('SELECT * FROM view1')
-  #  result= db.session.execute(sql)
-   # return result.fetchall().__str__()
-@app.route('/viewstudent')
-def display_test():
-    students = Student.query.all()
-    student_data = []
-    for student in students:
-        c=Class.query.filter_by(id=student.class_id).first()
-        student_dict = {
-            'id': student.id,
-            'fname': student.fname,
-            'lname': student.lname,
-            'dob': student.dob,
-            'email': student.email,
-            'phone': student.phone,
-            'enroll_date': student.enroll_date,
-            'class_id': c.name
-        }
-        student_data.append(student_dict)
-    return jsonify(student_data)
-@app.route('/viewclass')
-def display_class():
-    classes = Class.query.all()
-
-    class_data = []
-    for class1 in classes:
-        f = faculty.query.filter_by(id=class1.faculty_id).first()
-        c= Courses.query.filter_by(course_id=class1.course_id).first()
-        class_dict = {
-            'id': class1.id,
-            'name': class1.name,
-            'course_id': c.course_name,
-            'faculty_id': f.fname
-        }
-        class_data.append(class_dict)
-    return jsonify(class_data)
-
-@app.route('/viewfaculty')
-def display_faculty():
-    faculties = faculty.query.all()
-    faculty_data = []
-    for faculty1 in faculties:
-        d=Department.query.filter_by(id=faculty1.department_id).first()
-        faculty_dict = {
-            'id': faculty1.id,
-            'fname': faculty1.fname,
-            'lname': faculty1.lname,
-            'email': faculty1.email,
-            'phone': faculty1.phone,
-            'department_id': d.name
-        }
-        faculty_data.append(faculty_dict)
-    return jsonify(faculty_data)
-@app.route('/viewdepartment')
-def display_department():
-    departments = Department.query.all()
-
-    department_data = []
-    for department in departments:
-        h=faculty.query.filter_by(id=department.head).first()
-        department_dict = {
-            'id': department.id,
-            'name': department.name,
-            'head': h.fname + " " + h.lname
-        }
-        department_data.append(department_dict)
-    return jsonify(department_data)
-
-@app.route('/viewcourses')
-def view_courses():
-    courses = Courses.query.all()
-    course_data = []
-
-    for course in courses:
-
-        department = Department.query.filter_by(id=course.department_id).first()
-
-        course_dict = {
-            'id': course.course_id,
-            'name': course.course_name,
-            'department_id': department.name,
-            'credits': course.credits,
-            'semester': course.semester
-        }
-        course_data.append(course_dict)
-    return jsonify(course_data)
-
-
-@app.route('/verifylogin', methods=['POST'])
-def verify_login():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
-
-    user = Authentication.query.filter_by(email=email).first()
-    if user and user.password == password:
-        return {"status":True}
-    else:
-        return {"status":False}
-    
-if __name__ == "__main__":
-    app.run(debug=True,host="127.0.0.1",port="5500")
+@app.route('/displayview')
+def display_view():
+    sql = text('SELECT * FROM view1')
+    result= db.session.execute(sql)
+    return result.fetchall().__str__()
+if __name__ == '__main__':
+    app.run(debug=True, host='192.168.1.10',port='5500')

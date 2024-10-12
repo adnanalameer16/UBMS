@@ -5,9 +5,8 @@
     --button-bg: #7cb9e8;       /* Button background */
     --button-hover-bg: #7cb9e8; /* Button hover background */
     --text-color: #F0F0F0;      /* Text color */
-    --border-color: rgba(128, 128, 128, 0.25);        /* Border color */
-    --border-light: rgba(255, 255, 255, 0.26);
-    /* Light border color */
+    --border-color: grey;        /* Border color */
+    --border-light: white;       /* Light border color */
 }
 
 .invalid {
@@ -20,9 +19,6 @@
     background-color: #e6ffe6;
 }
 
-thead{
-    font-size: 20px;
-}
 
 
 dialog {

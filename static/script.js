@@ -35,7 +35,6 @@ closeAddButton.addEventListener("click", () => {
 
 submitButton.addEventListener("click", () => {
     dialog_login.close();
-    //submitData();
     inputs.forEach(input => input.value="");
     updateButton.style.display = 'block';
     addButton.style.display = 'block';
@@ -82,27 +81,18 @@ darkImage.addEventListener('click', () => {
     labels.forEach(label => label.classList.toggle('dark-theme'));
 });
 
-/* Dark theme */
 
 // Function to handle form submission
 function submitData() {
-    // Get input text
-    const id = document.querySelector('#id').value;
-    const fname = document.querySelector('#fname').value;
-    const lname = document.querySelector('#lname').value;
-    const email = document.querySelector('#emailstudent').value;
-    const dob = document.querySelector('#dob').value;
-    const phone = document.querySelector('#phone').value;
-    const enroll_date = document.querySelector('#enroll_date').value;
-    const class_id =document.querySelector('#class_id').value;
-       // Prepare the data as an object
+    const inputText = document.querySelector('input').value; // Get input text
+    
+    // Prepare the data as an object
     const jsonData = {
-        "id":id,"fname":fname,"lname":lname,"email":email,"dob":dob,"phone":phone,"enroll_date":enroll_date,"class_id":class_id
-        // Send input string as a property
+        "student_data": inputText  // Send input string as a property
     };
 
     // Make POST request to Flask
-    fetch('http://127.0.0.1:5500/addstudent', {
+    fetch('http://192.168.1.10:5500/addstudent1', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -118,6 +108,8 @@ function submitData() {
         console.log('Error occurred: ' + error);
     });
 }
+// Add event listener to the "Show" button
+document.querySelector('#showButton').addEventListener('click', submitData);
 
 // Function to display students
 function fetchAndDisplayStudents() {
