@@ -5,17 +5,12 @@ const logoutButton = document.querySelector(".logout-btn");
 const closeLoginButton = dialog_login.querySelector(".close-btn");
 const closeAddButton = dialog_add.querySelector(".close-btn");
 const submitButton = dialog_login.querySelector(".submit");
-const updateButton = document.querySelector('.update-btn');
 const addButton = document.querySelector('.add-btn');
 const submitadd = document.querySelector('.submit-add');
-const  viewStudent = document.querySelector('.view-student');
-const viewClass = document.querySelector('.view-class');
-const viewDepartment = document.querySelector('.view-department');
-const viewFaculty = document.querySelector('.view-faculty');
-const viewCourses = document.querySelector('.view-courses');
-const labels=document.querySelectorAll('label')
-const inputs=document.querySelectorAll('input')
+const labels = document.querySelectorAll('label');
+const inputs = document.querySelectorAll('input');
 
+//buttons start
 
 addButton.addEventListener("click", () => {
     dialog_add.showModal();
@@ -32,84 +27,167 @@ closeLoginButton.addEventListener("click", () => {
 closeAddButton.addEventListener("click", () => {
     dialog_add.close();
 });
+//buttons end
 
-submitButton.addEventListener("click", () => {
-    dialog_login.close();
-    inputs.forEach(input => input.value="");
-    updateButton.style.display = 'block';
-    addButton.style.display = 'block';
-    logoutButton.style.display = 'block';
-    loginButton.style.display = 'none';
+
+// login starts
+submitButton.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const inputlogin = document.querySelectorAll(".login input");
+    var flag = 1;
+
+    inputlogin.forEach(input => {
+        input.classList.remove('invalid', 'valid');
+    });
+
+    const isEmpty = Array.from(inputlogin).some(i => {
+        if (i.value === "") {
+            alert("Fill the necessary details");
+            i.classList.add('invalid');
+            flag = 0;
+            return true;
+        } else {
+            i.classList.add('valid');
+        }
+    });
+
+    if (flag === 1) {
+        const email = document.querySelector(".emaillogin").value;
+        const pass = document.querySelector(".password").value;
+
+        const jsonData = {
+            "email": email,
+            "password": pass
+        };
+
+        fetch('http://127.0.0.1:5500/verify_login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                inputlogin.forEach(input => { 
+                    input.value = ""; 
+                    input.classList.remove('valid');
+                });
+                dialog_login.close();
+                addButton.style.display = 'block';
+                logoutButton.style.display = 'block';
+                loginButton.style.display = 'none';
+                loggedin();
+            } else {
+                alert("Invalid username/password");
+                document.querySelector(".emaillogin").classList.add('invalid');
+                document.querySelector(".password").classList.add('invalid');
+            }
+        });
+    }
 });
 
-viewStudent.addEventListener("click", () => {
-    fetchAndDisplayStudents();
-});
-viewClass.addEventListener('click', fetchAndDisplayClasses);
-viewDepartment.addEventListener('click', fetchAndDisplayDepartments);
-viewFaculty.addEventListener('click', fetchAndDisplayFaculties);
-viewCourses.addEventListener('click', fetchAndDisplayCourses);
+// login ends
+
+function loggedin(){
+
+    submitadd.addEventListener("click",()=>{
+        submitData();
+        dialog_add.close();
+    });
 
 
-logoutButton.addEventListener("click", () => {
-    updateButton.style.display = 'none';
-    addButton.style.display = 'none';
-    logoutButton.style.display = 'none';
-    loginButton.style.display = 'block';
-});
+    logoutButton.addEventListener("click", () => {
+        addButton.style.display = 'none';
+        logoutButton.style.display = 'none';
+        loginButton.style.display = 'block';
+        return;
+    });
 
-submitadd.addEventListener("click",()=>{
-    submitData()
-    dialog_add.close();
-
-    inputs.forEach(input => input.value="");
-})
-
-/* Dark theme */
-
-const darkImage = document.querySelector('.dark');
-const body = document.body;
-const header = document.querySelector('.header');
-const sidebar = document.querySelector('.sidebar');
-const dialogs = document.querySelectorAll('dialog');
-
-darkImage.addEventListener('click', () => {
-    body.classList.toggle('dark-theme');
-    header.classList.toggle('dark-theme');
-    sidebar.classList.toggle('dark-theme');
-    dialogs.forEach(dialog => dialog.classList.toggle('dark-theme'));
-    labels.forEach(label => label.classList.toggle('dark-theme'));
-});
+}
 
 
 // Function to handle form submission
 function submitData() {
-    const inputText = document.querySelector('input').value; // Get input text
-    
-    // Prepare the data as an object
-    const jsonData = {
-        "student_data": inputText  // Send input string as a property
-    };
+    var flag=1;
+    const inputadd=document.querySelectorAll(".add-student input");
 
-    // Make POST request to Flask
-    fetch('http://192.168.1.10:5500/addstudent1', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(jsonData) // Convert the data object to JSON string
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log(data) // Display server response in the display box
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        console.log('Error occurred: ' + error);
+    inputadd.forEach(input => {
+        input.classList.remove('invalid', 'valid');
     });
-}
-// Add event listener to the "Show" button
-document.querySelector('#showButton').addEventListener('click', submitData);
+
+    const isEmpty = Array.from(inputadd).some(i => {
+        if (i.value === "") {
+            i.classList.add('invalid');
+            alert("Fill the necessary details");
+            flag=0;
+            return true;
+        } else {
+            i.classList.add('valid');
+        }
+    });
+
+    if (flag===1){
+
+            const id = document.querySelector('#id').value;
+            const fname = document.querySelector('#fname').value;
+            const lname = document.querySelector('#lname').value;
+            const email = document.querySelector('#emailstudent').value;
+            const dob = document.querySelector('#dob').value;
+            const phone = document.querySelector('#phone').value;
+            const enroll_date = document.querySelector('#enroll_date').value;
+            const class_id =document.querySelector('#class_id').value;
+
+            const jsonData = {
+                "id":id,"fname":fname,"lname":lname,"email":email,"dob":dob,"phone":phone,"enroll_date":enroll_date,"class_id":class_id
+
+            };
+
+
+            fetch('http://127.0.0.1:5500/addstudent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => response.json())  
+            .then(data => {
+                if (data.status) {
+                    inputadd.forEach(input => { 
+                        input.value = ""; 
+                        input.classList.remove('valid');
+                        dialog_add.close();
+                    });
+                } else {
+                    alert(data.message);
+                    inputadd[0].classList.remove('valid');
+                    inputadd[0].classList.add('invalid');
+                    return;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error occurred: ' + error);
+            });
+}}
+
+
+/* functions for sidebar starts  */
+
+const  viewStudent = document.querySelector('.view-student');
+const viewClass = document.querySelector('.view-class');
+const viewDepartment = document.querySelector('.view-department');
+const viewFaculty = document.querySelector('.view-faculty');
+const viewCourses = document.querySelector('.view-courses');
+
+viewStudent.addEventListener("click", fetchAndDisplayStudents);
+viewClass.addEventListener('click', fetchAndDisplayClasses);
+viewDepartment.addEventListener('click', fetchAndDisplayDepartments);
+viewFaculty.addEventListener('click', fetchAndDisplayFaculties);
+viewCourses.addEventListener('click', fetchAndDisplayCourses);
 
 // Function to display students
 function fetchAndDisplayStudents() {
@@ -419,3 +497,24 @@ function fetchAndDisplayCourses() {
         tableBody.innerHTML = `<tr><td colspan="4">Error occurred: ${error}</td></tr>`;
     });
 }
+
+/* functions for sidebar ends */
+
+/* Dark theme starts */
+
+const darkImage = document.querySelector('.dark');
+const body = document.body;
+const header = document.querySelector('.header');
+const sidebar = document.querySelector('.sidebar');
+const dialogs = document.querySelectorAll('dialog');
+const checkbox = document.getElementById("checkbox")
+
+checkbox.addEventListener("change", () => {
+    body.classList.toggle('dark-theme');
+    header.classList.toggle('dark-theme');
+    sidebar.classList.toggle('dark-theme');
+    dialogs.forEach(dialog => dialog.classList.toggle('dark-theme'));
+    labels.forEach(label => label.classList.toggle('dark-theme'));
+})
+
+/* Dark theme ends */
