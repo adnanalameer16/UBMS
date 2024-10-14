@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="/static/favicon.ico">
     <title>UBMS</title>
 </head>
 <body>
@@ -34,6 +35,7 @@
     <button type="button" class="view-department">Departments</button>
     <button type="button" class="view-faculty">Faculties</button>
     <button type="button" class="view-courses">Courses</button>
+    <button type="button" class="ranking">Ranking</button>
 
     </div>
     <div class="main">
@@ -42,37 +44,127 @@
                 <div class="close-container">
                     <img class="close-btn" src="/static/close.png" alt="close button" height="25px" width="25px">
                 </div>
-                <div class="login-container">
-                    <img src="/static/add-user.png" alt="add Student" height="100px" width="100px">
+                <div class="sec1">
+                    <div class="sec1-left add-student">
+                        <form>
+                            <label for="fname">First Name</label>
+                            <input type="text" id="fname" name="fname" required>
+                        
+                            <label for="lname">Last Name</label>
+                            <input type="text" id="lname" name="lname" required>
+                        </form>
+                    </div>
+                    <div class="login-container sec1-right">
+                        <img src="/static/logo-placeholder-image.png" alt="add Student" height="250px" width="250px">
+                    </div>
                 </div>
-                <form id="add-student-form">
-                    <div class="add-student">
-                         <label for="id">ID</label>
-                        <input type="number" id="id" name="id" required>
-
-                        <label for="fname">First Name</label>
-                        <input type="text" id="fname" name="fname" required>
+                <div class="sec2">
+                    <div class="sec2-right">
+                        <form>
+                            <div class="add-student">
+                                <label for="dob">DOB</label>
+                                <input type="date" id="dob" name="dob" required>
                     
-                        <label for="lname">Last Name</label>
-                        <input type="text" id="lname" name="lname" required>
-                    
-                        <label for="dob">DOB</label>
-                        <input type="date" id="dob" name="dob" required>
-                    
-                        <label for="email">Email</label>
-                        <input type="email" id="emailstudent" name="emailstudent" required>
-                    
-                        <label for="phone">Phone</label>
-                        <input type="tel" id="phone" name="phone" required>
-                    
-                        <label for="enroll_date">Enrollment Date</label>
-                        <input type="date" id="enroll_date" name="enroll_date" required>
-                        <label for="class_id">Class ID</label>
-                        <input type="number" id="class_id" name="class_id" required>
-                    </div>                    
-                </form>               
+                                <label for="email">Email</label>
+                                <input type="email" id="emailstudent" name="emailstudent" required>
+                                <label for="class_id">Class ID</label>
+                                <input type="number" id="class_id" name="class_id" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="sec2-left">
+                        <form>
+                            <div class="add-student">
+                                <label for="id">ID</label>
+                                <input type="number" id="id" name="id" readonly>
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" name="phone" required>
+                                <label for="enroll_date">Enrollment Date</label>
+                                <input type="date" id="enroll_date" name="enroll_date" required>
+                            </div>
+                        </form>
+                    </div>
+                </div>  
                 <div class="submit-container">
                     <button type="button" class="submit-add">Add</button>
+                    <button type="button" class="clear">Clear</button>
+                </div>
+            </div>
+        </dialog>
+        <dialog class="buttonsmf buttondial">
+            <div class="dialog-div">
+                <div class="close-container">
+                    <img class="close-btn" src="/static/close.png" alt="close button" height="25px" width="25px">
+                </div>
+                <div>
+                    <p></p>
+                </div>
+                <div class="submit-container">
+                    <button type="button" class="submit" id="edit">Edit</button>
+                    <button type="button" class="submit" id="delete">Delete</button>
+                    <button type="button" class="submit" id="view-grade">View Grade</button>
+                </div>
+            </div>
+        </dialog>
+        <dialog class="update-dialog">
+            <div class="dialog-div">
+                <div class="close-container">
+                    <img class="close-btn" src="/static/close.png" alt="close button" height="25px" width="25px">
+                </div>
+                <div class="updatesec1">
+                    <div class="updatesec1-left update-student">
+                        <form>
+                            <label for="fname">First Name</label>
+                            <input type="text" id="fnameupdate" name="fnameupdate" required>
+                        
+                            <label for="lname">Last Name</label>
+                            <input type="text" id="lnameupdate" name="lnameupdate" required>
+                        </form>
+                    </div>
+                    <div class="login-container updatesec1-right">
+                        <img src="/static/logo-placeholder-image.png" alt="add Student" height="250px" width="250px">
+                    </div>
+                </div>
+                <div class="updatesec2">
+                    <div class="updatesec2-right">
+                        <form>
+                            <div class="update-student">
+                                <div class="labelupdate">
+                                    <label for="dob">DOB</label>
+                                    <input type="date" id="dobupdate" name="dobupdate" required>
+                                </div>
+                                <div class="labelupdate">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="emailstudentupdate" name="emailstudentupdate" required>
+                                </div>
+                                <div class="labelupdate">
+                                    <label for="class_id">Class ID</label>
+                                    <input type="number" id="class_idupdate" name="class_idupdate" required>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="updatesec2-left">
+                        <form>
+                            <div class="update-student">
+                                <div class="labelupdate">
+                                    <label for="enroll_date">Enrollment Date</label>
+                                    <input type="date" id="enroll_dateupdate" name="enroll_dateupdate" required>
+                                </div>
+                                <div class="labelupdate">
+                                    <label for="id">ID</label>
+                                    <input type="number" id="idupdate" name="idupdate" readonly>
+                                </div>
+                                <div class="labelupdate">
+                                    <label for="phone">Phone</label>
+                                    <input type="tel" id="phoneupdate" name="phoneupdate" required>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>  
+                <div class="submit-container">
+                    <button type="button" class="submit-update">Add</button>
                     <button type="button" class="clear">Clear</button>
                 </div>
             </div>
@@ -91,10 +183,22 @@
                         <input type="email" class="emaillogin" name="emaillogin" required>
                         <label for="password">Password</label>
                         <input type="password" class="password" name="password" required>
+                        <a href="#">forgot password?</a>
                     </div>
                 </form>
                 <div class="submit-container">
                     <button type="submit" class="submit">Login</button>
+                </div>
+            </div>
+        </dialog>
+        <dialog class="delete-dialog deldial">
+            <div class="dialog-div">
+                <div>
+                    <p>are you sure?</p>
+                </div>
+                <div class="submit-container">
+                    <button type="button" class="yes">Yes</button>
+                    <button type="button" class="no">No</button>
                 </div>
             </div>
         </dialog>

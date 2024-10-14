@@ -1,14 +1,21 @@
 const dialog_login = document.querySelector("#myDialog");
 const dialog_add = document.querySelector(".add-dialog");
+const dialog_update = document.querySelector(".update-dialog");
+const dialog_button = document.querySelector(".buttonsmf");
 const loginButton = document.querySelector(".login-btn");
 const logoutButton = document.querySelector(".logout-btn");
 const closeLoginButton = dialog_login.querySelector(".close-btn");
 const closeAddButton = dialog_add.querySelector(".close-btn");
+const closeupdate = dialog_update.querySelector(".close-btn");
+const closemf = dialog_button.querySelector(".close-btn");
 const submitButton = dialog_login.querySelector(".submit");
 const addButton = document.querySelector('.add-btn');
 const submitadd = document.querySelector('.submit-add');
 const labels = document.querySelectorAll('label');
 const inputs = document.querySelectorAll('input');
+const submitupdate = document.querySelector('.submit-update');
+let logstatus=false;
+let student=false;
 
 //buttons start
 
@@ -26,6 +33,14 @@ closeLoginButton.addEventListener("click", () => {
 
 closeAddButton.addEventListener("click", () => {
     dialog_add.close();
+});
+
+closemf.addEventListener('click',()=>{
+    dialog_button.close();
+});
+
+closeupdate.addEventListener('click',() => {
+    dialog_update.close();
 });
 //buttons end
 
@@ -46,6 +61,12 @@ submitButton.addEventListener("click", (e) => {
             alert("Fill the necessary details");
             i.classList.add('invalid');
             flag = 0;
+            return true;
+        }
+        else if (!i.checkValidity()){
+            alert("Not Valid");
+            i.classList.add('invalid');
+            flag=0;
             return true;
         } else {
             i.classList.add('valid');
@@ -79,6 +100,7 @@ submitButton.addEventListener("click", (e) => {
                 addButton.style.display = 'block';
                 logoutButton.style.display = 'block';
                 loginButton.style.display = 'none';
+                logstatus=true;
                 loggedin();
             } else {
                 alert("Invalid username/password");
@@ -98,11 +120,14 @@ function loggedin(){
         dialog_add.close();
     });
 
+    const tableBody = document.getElementById('studentTableBody');
+    tableBody.addEventListener("click", firstclick);
 
     logoutButton.addEventListener("click", () => {
         addButton.style.display = 'none';
         logoutButton.style.display = 'none';
         loginButton.style.display = 'block';
+        logstatus=false;
         return;
     });
 
@@ -124,7 +149,14 @@ function submitData() {
             alert("Fill the necessary details");
             flag=0;
             return true;
-        } else {
+        }
+        else if(!i.checkValidity()){
+            i.classList.add('invalid');
+            alert("not valid");
+            flag=0;
+            return true;
+        } 
+        else {
             i.classList.add('valid');
         }
     });
@@ -160,6 +192,7 @@ function submitData() {
                         input.value = ""; 
                         input.classList.remove('valid');
                         dialog_add.close();
+                        window.location.reload();
                     });
                 } else {
                     alert(data.message);
@@ -182,17 +215,20 @@ const viewClass = document.querySelector('.view-class');
 const viewDepartment = document.querySelector('.view-department');
 const viewFaculty = document.querySelector('.view-faculty');
 const viewCourses = document.querySelector('.view-courses');
+const viewRankings = document.querySelector('.ranking');
 
 viewStudent.addEventListener("click", fetchAndDisplayStudents);
 viewClass.addEventListener('click', fetchAndDisplayClasses);
 viewDepartment.addEventListener('click', fetchAndDisplayDepartments);
 viewFaculty.addEventListener('click', fetchAndDisplayFaculties);
 viewCourses.addEventListener('click', fetchAndDisplayCourses);
+viewRankings.addEventListener('click', fetchAndDisplayRankings);
 
 // Function to display students
 function fetchAndDisplayStudents() {
     const tableBody = document.getElementById('studentTableBody');
     const tableHead = document.getElementById('table-head');
+    student=true;
 
     fetch('http://127.0.0.1:5500/viewstudent', {
         method: 'GET',
@@ -266,6 +302,7 @@ function fetchAndDisplayClasses() {
 
     const tableBody = document.getElementById('studentTableBody');
     const tableHead = document.getElementById('table-head');
+    student=false;
 
     fetch('http://127.0.0.1:5500/viewclass', {
         method: 'GET',
@@ -323,6 +360,7 @@ function fetchAndDisplayDepartments() {
 
     const tableBody = document.getElementById('studentTableBody');
     const tableHead = document.getElementById('table-head');
+    student=false;
 
 
     fetch('http://127.0.0.1:5500/viewdepartment', {
@@ -377,6 +415,7 @@ function fetchAndDisplayFaculties() {
 
     const tableBody = document.getElementById('studentTableBody');
     const tableHead = document.getElementById('table-head');
+    student=false;
 
 
     fetch('http://127.0.0.1:5500/viewfaculty', {
@@ -442,6 +481,7 @@ function fetchAndDisplayFaculties() {
 function fetchAndDisplayCourses() {
     const tableBody = document.getElementById('studentTableBody');
     const tableHead = document.getElementById('table-head');
+    student=false;
 
     fetch('http://127.0.0.1:5500/viewcourses', {
         method: 'GET',
@@ -498,6 +538,62 @@ function fetchAndDisplayCourses() {
     });
 }
 
+function fetchAndDisplayRankings() {
+        const tableBody = document.getElementById('studentTableBody');
+        const tableHead = document.getElementById('table-head');
+        student=false;
+    
+        fetch('http://127.0.0.1:5500/ranking', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            tableBody.innerHTML = '';
+            tableHead.innerHTML = '';
+    
+            const headerRow = document.createElement('tr');
+    
+            const headers = ['ID', 'FName', 'LName', 'Total'];
+    
+            headers.forEach(h => {
+                const header = document.createElement('th');
+                header.textContent = h;
+                headerRow.appendChild(header);
+            });
+    
+            tableHead.appendChild(headerRow);
+    
+            data.forEach(rank => {
+                dialog_button.close();
+                const row = document.createElement('tr');
+    
+                const idCell = document.createElement('td');
+                idCell.textContent = rank.id;
+                row.appendChild(idCell);
+    
+                const fnameCell = document.createElement('td');
+                fnameCell.textContent = rank.fname;
+                row.appendChild(fnameCell);
+    
+                const lnameCell = document.createElement('td');
+               lnameCell.textContent = rank.lname; 
+                row.appendChild(lnameCell);
+    
+                const totalCell = document.createElement('td');
+                totalCell.textContent = rank.total;
+                row.appendChild(totalCell);
+    
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            tableBody.innerHTML = `<tr><td colspan="4">Error occurred: ${error}</td></tr>`;
+        });
+    }
 /* functions for sidebar ends */
 
 /* Dark theme starts */
@@ -518,3 +614,235 @@ checkbox.addEventListener("change", () => {
 })
 
 /* Dark theme ends */
+
+/* update starts */
+
+function firstclick(e){
+    if(student){
+    if (logstatus){
+        const row = e.target.closest('tr');
+        const text = dialog_button.querySelector('p');
+        
+        text.textContent = `What do you want to do with ${row.cells[1].textContent}?`;
+
+    dialog_button.showModal();
+
+    document.getElementById('edit').addEventListener('click', function() {
+        updatetable(row);
+    });
+    document.getElementById('delete').addEventListener('click',function(){
+        deletestudent(row);
+    });
+    document.getElementById('view-grade').addEventListener('click',function(){
+        viewgrade(row);
+    });
+}
+
+    else{
+        alert("login to continue");
+        return;
+    }
+    }
+}
+
+function updatetable(row){
+
+    const inputupdate = document.querySelectorAll('.update-dialog input');
+
+
+    if (row){
+        inputupdate[6].value=row.cells[0].innerText;
+        inputupdate[0].value=row.cells[1].innerText;  
+        inputupdate[1].value=row.cells[2].innerText;  
+        inputupdate[2].value=row.cells[3].innerText;  
+        inputupdate[3].value=row.cells[4].innerText;  
+        inputupdate[7].value=row.cells[5].innerText;  
+        inputupdate[5].value=row.cells[6].innerText;    
+        inputupdate[4].value=row.cells[7].innerText;      
+
+    }
+
+    dialog_update.showModal();
+
+    submitupdate.addEventListener('click',updatedata);
+
+ }
+
+function updatedata(){
+        var flag=1;
+        const inputadd=document.querySelectorAll(".update-student input");
+    
+        inputadd.forEach(input => {
+            input.classList.remove('invalid', 'valid');
+        });
+    
+        const isEmpty = Array.from(inputadd).some(i => {
+            if (i.value === "") {
+                i.classList.add('invalid');
+                alert("Fill the necessary details");
+                flag=0;
+                return true;
+            }
+            else if(!i.checkValidity()){
+
+                i.classList.add('invalid');
+                alert("not valid");
+                flag=0;
+                return true;
+
+            } 
+            else {
+                i.classList.add('valid');
+            }
+        });
+    
+        if (flag===1){
+    
+                const id = document.querySelector('#idupdate').value;
+                const fname = document.querySelector('#fnameupdate').value;
+                const lname = document.querySelector('#lnameupdate').value;
+                const email = document.querySelector('#emailstudentupdate').value;
+                const dob = document.querySelector('#dobupdate').value;
+                const phone = document.querySelector('#phoneupdate').value;
+                const enroll_date = document.querySelector('#enroll_dateupdate').value;
+                const class_id =document.querySelector('#class_idupdate').value;
+    
+                const jsonData = {
+                    "id":id,"fname":fname,"lname":lname,"email":email,"dob":dob,"phone":phone,"enroll_date":enroll_date,"class_id":class_id
+    
+                };
+    
+    
+                fetch('http://127.0.0.1:5500/updatestudent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonData)
+                })
+                .then(response => response.json())  
+                .then(data => {
+                    if (data.status) {
+                        inputadd.forEach(input => { 
+                            input.value = ""; 
+                            input.classList.remove('valid');
+                            dialog_update.close();
+                            dialog_button.close();
+                            window.location.reload();
+                        });
+                    } else {
+                        alert(data.message);
+                        inputadd[0].classList.remove('valid');
+                        inputadd[0].classList.add('invalid');
+                        return;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error occurred: ' + error);
+                });
+    }}
+
+function deletestudent(row){
+   const dialog_delete = document.querySelector(".delete-dialog");
+   dialog_delete.showModal();
+   const yes = dialog_delete.querySelector('.yes');
+   const no = dialog_delete.querySelector('.no');
+
+   const id = row.cells[0].innerText
+
+   const jsonData = {"id":id }
+
+   yes.addEventListener('click',() => {
+    fetch('http://127.0.0.1:5500/deletestudent', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonData)
+    })
+    .then(response => response.json())  
+    .then(data => {
+        if (data.status) {
+            dialog_delete.close();
+            dialog_button.close();
+            window.location.reload();
+        } else {
+            alert(data.message);
+            id.classList.remove('valid');
+            id.classList.add('invalid');
+            return;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error occurred: ' + error);
+    });
+   });
+
+   no.addEventListener('click',() => {
+    dialog_delete.close();
+   });
+}
+
+
+
+function viewgrade(row){
+    const id = row.cells[0].innerText
+
+    const tableBody = document.getElementById('studentTableBody');
+    const tableHead = document.getElementById('table-head');
+
+   const jsonData = {"id":id }
+
+   fetch('http://127.0.0.1:5500/viewgrade',{
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(jsonData)
+   })
+   .then(response => response.json())
+   .then(data => {
+    tableBody.innerHTML = '';
+
+    tableHead.innerHTML='';
+
+    const headerRow = document.createElement('tr');
+
+    const headers = ['Subject', 'Grade', 'Grade_Date'];
+
+    headers.forEach(h => {
+        const header = document.createElement('th');
+        header.textContent = h;
+        headerRow.appendChild(header);
+    });
+    tableHead.appendChild(headerRow);
+
+    data.forEach(g => {
+        const row=document.createElement('tr');
+
+        const subject = document.createElement('td');
+        subject.textContent = g.subject;
+        row.appendChild(subject);
+        const grade = document.createElement('td');
+        grade.textContent = g.grade;
+        row.appendChild(grade);
+        const grade_date = document.createElement('td');
+        grade_date.textContent = g.grade_date;
+        row.appendChild(grade_date);
+
+        tableBody.appendChild(row);
+    });
+    dialog_button.close();
+})
+.catch(error => {
+    console.error('Error:', error);
+    tableBody.innerHTML = `<tr><td colspan="3">Error occurred: ${error}</td></tr>`;
+});
+
+}
+
+
+
+/*  update ends  */

@@ -113,119 +113,6 @@ def add_student():
 
     return {"status": True}
 
-@app.route('/addclass', methods=['POST'])
-def add_class():
-    data = request.get_json()
-    class_id = data.get('class_id')
-    name = data.get('name')
-    course_id = data.get('course_id')
-    faculty_id = data.get('faculty_id')
-
-    new_class = Class(
-        id=class_id,
-        name=name,
-        course_id=course_id,
-        faculty_id=faculty_id
-    )
-
-    db.session.add(new_class)
-    db.session.commit()
-
-    return "Class added successfully!"
-
-@app.route('/addfaculty', methods=['POST'])
-def add_faculty():
-    data = request.get_json()
-    faculty_id = data.get('faculty_id')
-    fname = data.get('fname')
-    lname = data.get('lname')
-    email = data.get('email')
-    phone = data.get('phone')
-    department_id = data.get('department_id')
-
-    new_faculty = faculty(
-        id=faculty_id,
-        fname=fname,
-        lname=lname,
-        email=email,
-        phone=phone,
-        department_id=department_id
-    )
-
-    db.session.add(new_faculty)
-    db.session.commit()
-    return "Faculty added successfully!"
-
-@app.route('/adddepartment', methods=['POST'])
-def add_department():
-    data = request.get_json()
-    department_id = data.get('department_id')
-    name = data.get('name')
-    head = data.get('head')
-
-    new_department = Department(
-        id=department_id,
-        name=name,
-        head=head
-    )
-    db.session.add(new_department)
-    db.session.commit()
-    return "Department added successfully!"
-
-@app.route('/addcourse', methods=['POST'])
-def add_course():
-    data = request.get_json()
-    course_id = data.get('course_id')
-    course_name = data.get('course_name')
-    department_id = data.get('department_id')
-    credits = data.get('credits')
-    semester = data.get('semester')
-
-    new_course = Courses(
-        course_id=course_id,
-        course_name=course_name,
-        department_id=department_id,
-        credits=credits,
-        semester=semester
-    )
-    db.session.add(new_course)
-    db.session.commit()
-    return "Course added successfully!"
-
-@app.route('/addenrollment', methods=['POST'])
-def add_enrollment():
-    data = request.get_json()
-    enrollment_id = data.get('enrollment_id')
-    student_id = data.get('student_id')
-    class_id = data.get('class_id')
-
-    new_enrollment = Enrollments(
-        enrollment_id=enrollment_id,
-        student_id=student_id,
-        class_id=class_id
-    )
-    db.session.add(new_enrollment)
-    db.session.commit()
-    return "Enrollment added successfully!"
-
-@app.route('/addgrade', methods=['POST'])
-def add_grade():
-    data = request.get_json()
-    enrollment_id = data.get('enrollment_id')
-    subject = data.get('subject')
-    grade = data.get('grade')
-    grade_date = data.get('grade_date')
-
-    new_grade = Grade(
-        enrollment_id=enrollment_id,
-        subject=subject,
-        grade=grade,
-        grade_date=grade_date
-    )
-    db.session.add(new_grade)
-    db.session.commit()
-    return "Grade added successfully!"
-
 @app.route('/displaystudents')
 def display_students():
     sql = text('SELECT * FROM Student')
@@ -233,47 +120,6 @@ def display_students():
     return result.fetchall().__str__()
 from sqlalchemy.sql import text
 
-@app.route('/createview')
-def create_view():
-    view_sql =text( """
-    CREATE VIEW view1 AS
-    SELECT 
-        s.id AS student_id,
-        s.fname AS student_fname,
-        s.lname AS student_lname,
-        s.dob AS student_dob,
-        s.email AS student_email,
-        s.phone AS student_phone,
-        s.enroll_date AS student_enroll_date,
-        c.name AS class_name,
-        f.fname AS faculty_fname,
-        f.lname AS faculty_lname,
-        d.name AS department_name,
-        co.course_name,
-        g.grade,
-        g.grade_date
-    FROM 
-        Student s
-    JOIN 
-        Enrollments e ON s.id = e.student_id
-    JOIN 
-        Class c ON e.class_id = c.id
-    JOIN 
-        faculty f ON c.faculty_id = f.id
-    JOIN 
-        Department d ON f.department_id = d.id
-    JOIN 
-        Courses co ON c.course_id = co.course_id
-    
-    JOIN 
-        Grade g ON e.enrollment_id = g.enrollment_id;
-    """)
-    db.session.execute(view_sql)
-#@app.route('/displayview')
-#def display_view():
- #   sql = text('SELECT * FROM view1')
-  #  result= db.session.execute(sql)
-   # return result.fetchall().__str__()
 @app.route('/viewstudent')
 def display_test():
     students = Student.query.all()
@@ -372,5 +218,91 @@ def verify_login():
     else:
         return {"status":False}
     
+
+@app.route('/updatestudent', methods=['POST'])
+def updatestudent():
+    data=request.get_json()
+    student_id = data.get('id')
+    fname = data.get('fname')
+    lname = data.get('lname')
+    dob = data.get('dob')
+    email = data.get('email')
+    phone = data.get('phone')
+    enroll_date = data.get('enroll_date')
+    class_id = data.get('class_id')
+
+    existing_student = Student.query.filter_by(id=student_id).first()
+    print(existing_student)
+
+    if existing_student:
+        # Create a new student instance
+        new_student = Student(
+            id=student_id,
+            fname=fname,
+            lname=lname,
+            dob=dob,
+            email=email,
+            phone=phone,
+            enroll_date=enroll_date,
+            class_id=class_id
+        )
+        sql=text("UPDATE Student SET fname=:fname,lname=:lname,dob=:dob,email=:email,phone=:phone,enroll_date=:enroll_date,class_id=:class_id WHERE id=:student_id")
+        db.session.execute(sql,{'fname':fname,'lname':lname,'dob':dob,'email':email,'phone':phone,'enroll_date':enroll_date,'class_id':class_id,'student_id':student_id})
+        db.session.commit()
+
+        return {"status": True}
+
+    return {"status": False, "message": "Student ID does not exists."}
+
+@app.route('/deletestudent', methods=['POST'])
+def deletestudent():
+    data = request.get_json()
+    student_id = data.get('id')
+    existing_student = Student.query.filter_by(id=student_id).first()
+    if existing_student:
+        sql = text('DELETE FROM Student WHERE id=:student_id')
+        db.session.execute(sql, {'student_id': student_id})
+        db.session.commit()
+        return {"status": True}
+    return {"status": False, "message": "Student ID does not exists."}
+
+@app.route('/viewgrade', methods=['POST'])
+def viewgrade():
+    data = request.get_json()
+    student_id = data.get('id')
+    sql = text('SELECT * FROM Grade WHERE enrollment_id IN (SELECT enrollment_id FROM Enrollments WHERE student_id=:student_id)')
+    res=db.session.execute(sql, {'student_id': student_id})
+    db.session.commit()
+    grades = []
+    for i in res:
+        data={
+            'subject':i[1],
+            'grade':i[2],
+            'grade_date':i[3]
+        }
+        grades.append(data)
+    return jsonify(grades)
+
+@app.route('/ranking', methods=['GET'])
+def ranking():
+    grade={'A':5,'B':4,'C':3,'D':2,'F':1}
+    students=Student.query.all()
+    grade_list=[]
+
+    for i in students:
+        e_id=0
+        enrollment=Enrollments.query.filter_by(student_id=i.id).first()
+        if enrollment is None:
+            continue
+        e_id=enrollment.enrollment_id
+        grades= Grade.query.filter_by(enrollment_id=e_id).all()
+        total=0
+        for j in grades:
+            total+=grade[j.grade]
+        data={'id':i.id,'fname':i.fname,'lname': i.lname,'total':total}
+        grade_list.append(data)
+    grade_list.sort(key=lambda x:x['total'],reverse=True)
+    return jsonify(grade_list)
+
 if __name__ == "__main__":
     app.run(debug=True,host="127.0.0.1",port="5500")

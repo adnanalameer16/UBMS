@@ -3,7 +3,7 @@
     --header-bg: #37414A;       /* Header background */
     --sidebar-bg: #4A5864;      /* Sidebar background */
     --button-bg: #7cb9e8;       /* Button background */
-    --button-hover-bg: #7cb9e8; /* Button hover background */
+    --button-hover-bg: #2570a6; /* Button hover background */
     --text-color: #F0F0F0;      /* Text color */
     --border-color: grey;        /* Border color */
     --border-light: white;       /* Light border color */
@@ -19,7 +19,30 @@
     background-color: #e6ffe6;
 }
 
+.readonly{
+    background-color: black;
+    border: none;
+    color: white;
+    pointer-events: none;
+}
 
+p{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.deldial, .buttondial{
+    border-radius: 0px;
+    background: white;
+}
+
+.deldial .yes{
+    background: red;
+}
+
+.deldial .no{
+    background: green;
+}
 
 dialog {
     width: 300px;
@@ -139,6 +162,10 @@ td {
 
 td:last-child {
     border-right: none;
+}
+
+tr:hover{
+    background-color: #C0C4CC !important;
 }
 
 tr:nth-child(even) {
@@ -350,3 +377,123 @@ body.dark-theme {
   .checkbox:checked + .checkbox-label .ball {
     transform: translateX(32px);
   }
+
+  .deldial.dark-theme, .buttondial.dark-theme{
+    background: linear-gradient(to bottom, #333333, #1a1a1a);
+    color: white;
+  }
+
+  /*            */
+
+  .add-dialog, .update-dialog{
+    background: linear-gradient(to bottom, #AEDFF5, #ffffff);
+    border-radius: 20px;
+    height: 600px;
+    width: fit-content;
+  }
+
+  .sec1{
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .updatesec1{
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+
+
+
+  .sec1-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 170px;
+  }
+
+  .updatesec1-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+  }
+
+
+
+  .sec2{
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .updatesec2{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+
+
+  .sec2-left,.sec2-right{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 50%;
+  }
+
+
+  .updatesec2 .update-student{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 200px;
+    width: 400px;
+ }
+
+ .updatesec2 .update-student input{
+    width: 175%;
+ }
+
+  .sec2 input{
+    width: 150%;
+  }
+
+  .updatesec2 input{
+    width: 100%;
+  }
+
+  .labelupdate{
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+  .sec1 input,.sec2 input{
+    border-radius: 50px;
+    background: #E5E7EB;
+  }
+
+  .updatesec1 input, .updatesec2 input{
+    border-radius: 50px;
+    background: #E5E7EB;
+  }
+
+
+
+
+
+  /*              */
