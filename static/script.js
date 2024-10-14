@@ -1,6 +1,8 @@
 const dialog_login = document.querySelector("#myDialog");
 const dialog_add = document.querySelector(".add-dialog");
 const dialog_update = document.querySelector(".update-dialog");
+const clear_update = dialog_update.querySelector(".clear");
+const clear_add = dialog_add.querySelector(".clear");
 const dialog_button = document.querySelector(".buttonsmf");
 const loginButton = document.querySelector(".login-btn");
 const logoutButton = document.querySelector(".logout-btn");
@@ -141,6 +143,12 @@ function submitData() {
 
     inputadd.forEach(input => {
         input.classList.remove('invalid', 'valid');
+    });
+
+    clear_add.addEventListener('click', () => {
+        inputadd.forEach(input => {
+            input.value="";
+        });
     });
 
     const isEmpty = Array.from(inputadd).some(i => {
@@ -671,6 +679,12 @@ function updatetable(row){
 function updatedata(){
         var flag=1;
         const inputadd=document.querySelectorAll(".update-student input");
+
+        clear_update.addEventListener('click', () => {
+            inputadd.forEach(input => {
+                input.value="";
+            });
+        });
     
         inputadd.forEach(input => {
             input.classList.remove('invalid', 'valid');
@@ -846,3 +860,96 @@ function viewgrade(row){
 
 
 /*  update ends  */
+const pass = document.querySelector('a');
+
+pass.addEventListener('click',forgot)
+
+function forgot(){
+    let mess="";
+    const inputemail = document.querySelectorAll(".login .emaillogin");
+    const loadingElement = document.getElementById("loading");
+
+    if (inputemail[0].checkValidity()){
+        const email = inputemail[0].value
+
+       // loadingElement.style.display = "block";
+
+        fetch("http://127.0.0.1:5500/forgotpassword", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: email }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            alert("An error occurred. Please try again.");
+        })
+        .finally(() => {
+            //loadingElement.style.display = "none";
+        });
+        };
+    };
+
+
+    function getRandomRgb() {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+    
+    const party = document.querySelector('.easteregg');
+    let partyInterval;
+    let isPartyMode = false; 
+    
+    party.addEventListener('click', partymode);
+    
+    function partymode() {
+        const root = document.documentElement;
+    
+        if (!isPartyMode) {
+            isPartyMode = true;
+            partyInterval = setInterval(() => {
+                root.style.setProperty('--bg-color', getRandomRgb());
+                root.style.setProperty('--header-bg', getRandomRgb());
+                root.style.setProperty('--sidebar-bg', getRandomRgb());
+                root.style.setProperty('--button-bg', getRandomRgb());
+                root.style.setProperty('--button-hover-bg', getRandomRgb());
+                root.style.setProperty('--text-color', getRandomRgb());
+                root.style.setProperty('--border-color', getRandomRgb());
+                root.style.setProperty('--border-light', getRandomRgb());
+    
+                root.style.setProperty('--table-bg', getRandomRgb());
+                root.style.setProperty('--table-text-color', getRandomRgb());
+                root.style.setProperty('--table-border-color', getRandomRgb());
+                root.style.setProperty('--table-row-hover-bg', getRandomRgb());
+                root.style.setProperty('--table-row-even-bg', getRandomRgb());
+                root.style.setProperty('--table-row-odd-bg', getRandomRgb());
+            }, 200); 
+        } else {
+            isPartyMode = false;
+    
+            // Reset the colors back to their original values
+            root.style.setProperty('--bg-color', '#a6b1bc');
+            root.style.setProperty('--header-bg', '#37414A');
+            root.style.setProperty('--sidebar-bg', '#4A5864');
+            root.style.setProperty('--button-bg', '#7cb9e8');
+            root.style.setProperty('--button-hover-bg', '#2570a6');
+            root.style.setProperty('--text-color', '#F0F0F0');
+            root.style.setProperty('--border-color', 'grey');
+            root.style.setProperty('--border-light', 'white');
+    
+            root.style.setProperty('--table-bg', '#F0F0F0');
+            root.style.setProperty('--table-text-color', '#333');
+            root.style.setProperty('--table-border-color', '#ccc');
+            root.style.setProperty('--table-row-hover-bg', '#C0C4CC');
+            root.style.setProperty('--table-row-even-bg', '#E5E7EB');
+            root.style.setProperty('--table-row-odd-bg', '#fff');
+    
+            clearInterval(partyInterval); 
+        }
+    }

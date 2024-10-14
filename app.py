@@ -1,3 +1,4 @@
+from flask_mail import Mail, Message
 from flask import Flask, render_template, jsonify,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -10,6 +11,15 @@ app = Flask(__name__,static_url_path='/static',template_folder='templates')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///universityDB.db'  # Replace with your database URI
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+# email
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = '22cs327@mgits.ac.in'
+app.config['MAIL_PASSWORD'] = 'adnan@2003'
+mail = Mail(app)
+# email
 
 # Define the Student model
 class Student(db.Model):
@@ -303,6 +313,30 @@ def ranking():
         grade_list.append(data)
     grade_list.sort(key=lambda x:x['total'],reverse=True)
     return jsonify(grade_list)
+
+
+@app.route('/forgotpassword', methods=['POST'])
+def forgotpassword():
+    data = request.get_json()
+    email = data.get('email')
+
+    if not email:
+        return jsonify({"message": "Email is required"})
+
+
+    user = Authentication.query.filter_by(email=email).first()
+
+    if user:
+        try:
+            msg = Message("Your Password", sender="22cs327@mgits.ac.in", recipients=[email])
+            msg.body = f"Your password is: {user.password}"
+            mail.send(msg)
+
+            return jsonify({"message": "Password sent to your email."})
+        except Exception as e:
+            return jsonify({"message": "Failed to send email."})
+    else:
+        return jsonify({"message": "Email not found."})
 
 if __name__ == "__main__":
     app.run(debug=True,host="127.0.0.1",port="5500")
